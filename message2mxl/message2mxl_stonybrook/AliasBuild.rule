@@ -1,0 +1,92 @@
+
+ [#
+    Always
+ #]
+ Template {#
+    <%
+        data.put("result_alias_group", "");
+        if ( data.get("patientAA").toString().equals("2.16.840.1.113883.3.787.0.0") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.787.0.1") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.787.0.2") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.787.0.3") ) {
+            data.put("result_alias_group", "AHS");          
+        } else if ( data.get("patientAA").toString().equals("2.16.840.1.113883.3.701.0.10") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.701.002.1") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.701.001.1") ) {
+            data.put("result_alias_group", "EMORY");
+        } else if ( data.get("patientAA").toString().equals("2.16.840.1.113883.3.428.1.1") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.429.1.1") ||
+             data.get("patientAA").toString().equals("http://www.stfrancismaryville.com/Pages/default.aspx") ) {
+            data.put("result_alias_group", "LACIE");
+        } else if ( data.get("patientAA").toString().equals("5.55.555.5.123456.5.555.1.1") ) {
+            data.put("result_alias_group", "STANISLAUS");
+        } else {
+            data.put("result_alias_group", data.get("patientAA").toString());
+        }
+
+        data.put("orders_group", "");
+        if ( data.get("patientAA").toString().equals("2.16.840.1.113883.3.428.1.1") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.429.1.1") ||
+             data.get("patientAA").toString().equals("http://www.stfrancismaryville.com/Pages/default.aspx") ) {
+            data.put("orders_group", "LACIE");
+        } else {
+            data.put("orders_group", data.get("patientAA").toString());
+        }
+
+        data.put("encounter_group", "");
+        if ( data.get("patientAA").toString().equals("2.16.840.1.113883.3.599.1.1") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.599.1.2") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.599.1.3") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.599.1.4") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.599.1.5") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.599.1.6") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.599.1.7") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.599.1.8") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.599.1.9") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.599.1.10") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.599.1.11") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.599.1.12") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.599.1.13") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.599.1.14") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.594.1.1") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.594.1.2") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.594.1.3") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.594.1.4") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.594.1.5") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.594.1.6") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.594.1.7") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.594.1.8") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.594.1.9") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.594.1.10") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.594.1.11") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.594.1.12") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.594.1.13") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.582.1.2") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.582.1.3") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.582.1.4") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.637.1.1") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.637.1.2") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.637.5.1") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.581.1.1") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.593.1.1") ||
+             data.get("patientAA").toString().equals("2.16.840.1.113883.3.588.1.1") ) {
+            data.put("encounter_group", "SMRTNET");
+        } else {
+            data.put("encounter_group", data.get("patientAA").toString());
+        }
+
+        if (data.get("patientAA").equals("2.16.840.1.113883.3.429.1.1") ) {
+            data.put("encounter_alias", input.get("PV1.19/CX.1").toString());
+        } else {
+            data.put("encounter_alias", input.get("PID.18/CX.1").toString());
+        }
+
+        if(!data.get("encounter_alias").toString().equals("")){
+            data.put("encounter_origin", "original");
+        } else {
+            data.put("encounter_alias", UUID.randomUUID());
+            data.put("encounter_origin", "generated");
+        }
+
+    %>
+ #}

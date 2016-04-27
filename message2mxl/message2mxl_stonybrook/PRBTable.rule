@@ -1,0 +1,29 @@
+/* Code system transformation template */
+[#
+  ID: ClassificationTable
+#]
+Table {#
+
+MED = Medical
+DIET = Dietary
+NUR = Nursing
+
+#}
+
+[#
+  ID: ProblemStatusTable
+#]
+Table {#
+
+55561003 = Active
+73425007 = Inactive
+413322009 = Resolved
+
+#}
+
+[#
+  ID: CodeSystemName
+#]
+Table {#
+  FT1test  = CPT-4
+#}

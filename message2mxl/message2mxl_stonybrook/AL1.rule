@@ -1,0 +1,97 @@
+
+
+[#
+   Message: ADT
+#]
+Template {#
+	<% 	engine.callRule("AL1Processing", input.get("Allergy"), data); %>
+#}
+
+[#
+   ID: AL1Processing
+#]
+Template {#
+<% if(!input.get("AL1.3/CE.1").equals("") || !input.get("AL1.3/CE.2").equals("")) {
+String strComment=input.get("NTE.3");
+
+String sSeverity = engine.callRule("AllergySeverityTable", input.get("AL1.4"), data);
+if(sSeverity.equals(""))
+{
+    sSeverity = input.get("AL1.4");
+}
+
+String sSeverityCd = engine.callRule("AllergySeverityCdTable", input.get("AL1.4"), data);
+if(sSeverityCd.equals(""))
+{
+    sSeverityCd = input.get("AL1.4");
+}
+
+String sCategory = engine.callRule("AllergyCategoryTable", input.get("AL1.2"), data);
+if(sCategory.equals(""))
+{
+    sCategory = input.get("AL1.2");
+}
+
+String sCategoryCd = engine.callRule("AllergyCategoryCdTable", input.get("AL1.2"), data);
+if(sCategoryCd.equals(""))
+{
+    sCategoryCd = input.get("AL1.2");
+}
+
+String sStatus = engine.callRule("AllergyStatusTable", input.get("ZAL.6"), data);
+if(sStatus.equals(""))
+{
+    sStatus = input.get("ZAL.6");
+    if(sStatus.equals(""))
+    {
+        sStatus = "Active";
+    }
+}
+
+String sStatusCd = engine.callRule("AllergyStatusCdTable", input.get("ZAL.6"), data);
+if(sStatusCd.equals(""))
+{
+    sStatusCd = input.get("ZAL.6");
+    if(sStatusCd.equals(""))
+    {
+        sStatusCd = "55561003";
+    }
+}
+
+String sDateReported = input.get("AL1.6");
+if(sDateReported.equals(""))
+{
+    sDateReported = parentinput.get("PV1.45/TS.1");
+    if(sDateReported.equals(""))
+    {
+        sDateReported = parentinput.get("PV1.44/TS.1");
+    }
+
+}
+
+%>
+    <allergy>
+        <SOURCE><%= data.get("source") %></SOURCE>
+        <DOCUMENT_DATETIME><%= globalinput.get("MSH.7/TS.1") %></DOCUMENT_DATETIME>
+        <ALLERGY><%= input.get("AL1.3/CE.2") %></ALLERGY>
+        <ALLERGY_CODE><%= input.get("AL1.3/CE.1") %></ALLERGY_CODE>
+        <ALLERGY_CODE_SOURCE><%= input.get("AL1.3/CE.3") %></ALLERGY_CODE_SOURCE>
+        <ALLERGY_TYPE_CODE><%= input.get("ZAL.5") %></ALLERGY_TYPE_CODE>
+        <ALLERGY_TYPE_DISP><%= input.get("ZAL.5") %></ALLERGY_TYPE_DISP>
+        <CATEGORY_CODE><%= sCategoryCd %></CATEGORY_CODE>
+        <CATEGORY><%= sCategory %></CATEGORY>
+        <DATE_REPORTED><%= sDateReported %></DATE_REPORTED>
+        <REACTIONS><%= input.get("AL1.5") %></REACTIONS>
+        <REACTIONS_CODE><%= input.get("AL1.5") %></REACTIONS_CODE>
+        <SEVERITY><%= sSeverity %></SEVERITY>
+        <SEVERITY_CODE><%= sSeverityCd %></SEVERITY_CODE>
+        <REACTION_TYPE><%= input.get("ZAL.5") %></REACTION_TYPE>
+        <STATUS><%= sStatus %></STATUS>
+        <STATUS_CODE><%= sStatusCd %></STATUS_CODE>
+        <COMMENTS><%= strComment.replaceAll("\n", "&lt;br/&gt;") %></COMMENTS>
+        <ENCOUNTER_NUM><%=data.get("encounter_alias").toString() %></ENCOUNTER_NUM>
+        <ENCOUNTER_ORIGIN><%=data.get("encounter_origin").toString() %></ENCOUNTER_ORIGIN>
+    </allergy>
+<% } %>
+#}
+

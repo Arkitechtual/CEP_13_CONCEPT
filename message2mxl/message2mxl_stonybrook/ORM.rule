@@ -1,0 +1,125 @@
+[#
+   Message: ORM
+#]
+Template {#
+	<% engine.callRule("ORMProcessing", input.get("Order"), data);%>
+#}
+
+[#
+   Message: OMP
+#]
+Template {#
+	<% engine.callRule("ORMProcessing", input.get("Order"), data);%>
+#}
+
+[#
+   ID: ORMProcessing
+#]
+Template {#
+<%
+//this status stuff is special logic for lacie. if ORC-16 is 1, this means RX, if 2, it means HX.
+//they want RX to show as active, HX to show as Documented.  Alias in ORC.5 will be used, except for HX.
+
+String strStatus= "";
+String strStatusCd = engine.callRule("OrderStatusCdTable", data.get("orders_group").toString() + input.get("ORC.5").toString(), data);
+if(strStatusCd.equals("")) {
+    strStatusCd = engine.callRule("OrderStatusCdTable", input.get("ORC.5"), data);
+}
+if ( strStatusCd.equals("55561003") && !input.get("ORC.16/CE.1").equals("") && input.get("ORC.16/CE.1").equals("2")) {
+    strStatus="Documented";
+} else {
+    strStatus=engine.callRule("OrderStatusTable", input.get("ORC.5"), data);
+}
+
+String sORC7 = input.get("ORC.7/TQ.2/RI.1");
+//sORC7  make sure the Coded Order does not have any spaces
+sORC7 = sORC7.replace("AT BEDTIME", "ATBEDTIME");
+
+String sRXO4 = input.get("RXO.4/CE.1");
+sRXO4 = sRXO4.replace(" ", "-");
+String dose_qty = "";
+String dose_qty_unit = "";
+String dispense_qty = "";
+String dispense_qty_units = "";
+String prn_ind = "";
+String prn_text = "";
+
+
+if ( input.get("RXO.2").equals("") ) {  //No Requested Dosage Form Provided
+  if ( !input.get("RXO.4/CE.1").equals("") ) {
+    dose_qty_unit= sRXO4;
+  } else {
+    dose_qty_unit = input.get("RXO.5/CE.1");
+  }
+} else {
+  dose_qty = input.get("RXO.2");
+  dose_qty_unit= input.get("RXO.4/CE.1");
+}
+
+if ( input.get("ORC.7/TQ.1/CQ.1").equals("") ) {
+    if ( !input.get("RXO.11").equals("") ) {
+        dispense_qty = input.get("RXO.11");
+        dispense_qty_units = input.get("RXO.12");
+    }
+} else {
+    dispense_qty = input.get("ORC.7/TQ.1/CQ.1");
+}
+
+if(input.get("OBX").size()>0){
+    for(int x=0; x<input.get("OBX").size();x++)
+    {
+        if(input.get("OBX").get(x).get("OBX.3/CE.1").equals("PRNI")){
+            prn_ind="1";
+            prn_text=input.get("OBX").get(x).get("OBX.5/CE.1");
+        }
+    }
+}
+
+String pat_instruction = "";
+if (input.get("RXO.6/CE.2").equals("") ) {
+     pat_instruction = input.get("RXO.7/CE.1");
+} else {
+     pat_instruction = input.get("RXO.6/CE.2");
+}
+
+%>
+<medication>
+    <SOURCE><%= data.get("source") %></SOURCE>
+    <DOCUMENT_DATETIME><%= globalinput.get("MSH.7/TS.1") %></DOCUMENT_DATETIME>
+    <ORDER_ALIAS><%= input.get("ORC.3/CM.0") %></ORDER_ALIAS>
+    <MEDICATION><%= input.get("RXO.1/CE.2") %></MEDICATION>
+    <MEDICATION_CODE><%= input.get("RXO.1/CE.1") %></MEDICATION_CODE>
+    <MEDICATION_CODE_SOURCE>2.16.840.1.113883.6.88</MEDICATION_CODE_SOURCE>
+    <DOSE_QTY><%= dose_qty %></DOSE_QTY>
+    <DOSE_QTY_UNIT><%= dose_qty_unit %></DOSE_QTY_UNIT>
+    <RATE_QTY></RATE_QTY>
+    <RATE_QTY_UNIT><%= input.get("ORC.7/TQ.2/RI.1") %></RATE_QTY_UNIT>
+    <PRN_IND><%= prn_ind %></PRN_IND>
+    <PRN_TEXT><%= prn_text %></PRN_TEXT>
+    <ROUTE><%= input.get("RXR.1/CE.1") %></ROUTE>
+    <ROUTE_DISPLAY><%= input.get("RXR.1/CE.1") %></ROUTE_DISPLAY>
+    <DISPENSE><%= dispense_qty %></DISPENSE>
+    <DISPENSE_UNITS><%= dispense_qty_units %></DISPENSE_UNITS>
+    <REFILLS><%= input.get("RXO.13") %></REFILLS>
+    <STATUS><%= strStatus %></STATUS>
+    <STATUS_CODE><%= strStatusCd %></STATUS_CODE>
+    <INSTRUCTIONS><%= pat_instruction %></INSTRUCTIONS>
+    <ORDERING_PROVIDER_ID><%= input.get("ORC.12/XCN.1") %></ORDERING_PROVIDER_ID>
+    <ORDERING_PROVIDER_ID_OID></ORDERING_PROVIDER_ID_OID>
+    <ORDERING_PROVIDER_FIRST><%= input.get("ORC.12/XCN.3") %></ORDERING_PROVIDER_FIRST>
+    <ORDERING_PROVIDER_MIDDLE><%= input.get("ORC.12/XCN.4") %></ORDERING_PROVIDER_MIDDLE>
+    <ORDERING_PROVIDER_LAST><%= input.get("ORC.12/XCN.2") %></ORDERING_PROVIDER_LAST>
+    <ORDERING_PROVIDER_SUFFIX><%= input.get("ORC.12/XCN.5") %></ORDERING_PROVIDER_SUFFIX>
+    <ORDER_DATE><%= input.get("ORC.7/TQ.4/TS.1") %></ORDER_DATE>
+    <ORDER_STOP_DATE><%= input.get("ORC.7/TQ.5/TS.1") %></ORDER_STOP_DATE>
+    <LAST_REVIEWED_BY_ID><%= input.get("ORC.11/XCN.1") %></LAST_REVIEWED_BY_ID>
+    <LAST_REVIEWED_BY_ID_OID></LAST_REVIEWED_BY_ID_OID>
+    <LAST_REVIEWED_BY_FIRST><%= input.get("ORC.11/XCN.3") %></LAST_REVIEWED_BY_FIRST>
+    <LAST_REVIEWED_BY_MIDDLE><%= input.get("ORC.11/XCN.4") %></LAST_REVIEWED_BY_MIDDLE>
+    <LAST_REVIEWED_BY_LAST><%= input.get("ORC.11/XCN.2") %></LAST_REVIEWED_BY_LAST>
+    <LAST_REVIEWED_BY_SUFFIX><%= input.get("ORC.11/XCN.5") %></LAST_REVIEWED_BY_SUFFIX>
+    <ENCOUNTER_NUM><%=data.get("encounter_alias").toString() %></ENCOUNTER_NUM>
+    <ENCOUNTER_ORIGIN><%=data.get("encounter_origin").toString() %></ENCOUNTER_ORIGIN>
+</medication>
+
+#}

@@ -1,0 +1,574 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+    <type id="TXT">
+        <description>text data</description>
+        <parts>
+            <part reader="com.browsersoft.openhre.hl7.impl.parser.StringDataTypeReader"/>
+        </parts>
+    </type>
+    <type id="ST">
+        <description>string data</description>
+        <parts>
+            <part reader="com.browsersoft.openhre.hl7.impl.parser.StringDataTypeReader"/>
+        </parts>
+    </type>
+    <type id="given">
+        <description>given</description>
+        <parts>
+            <part reader="com.browsersoft.openhre.hl7.impl.parser.StringDataTypeReader"/>
+        </parts>
+    </type>
+    <type id="DT">
+        <description>date ( Format: YYYY[MM[DD]])</description>
+        <parts>
+            <part reader="com.browsersoft.openhre.hl7.impl.parser.StringDataTypeReader"/>
+        </parts>
+    </type>
+    <type id="NM">
+        <description>numeric</description>
+        <parts>
+            <part reader="com.browsersoft.openhre.hl7.impl.parser.NumericDataTypeReader"/>
+        </parts>
+    </type>
+    <type id="NUM">
+        <description>numeric</description>
+        <parts>
+            <part reader="com.browsersoft.openhre.hl7.impl.parser.NumericDataTypeReader"/>
+        </parts>
+    </type>
+    <type id="ID">
+        <description>coded value for HL7-defined tables</description>
+        <parts>
+            <part reader="com.browsersoft.openhre.hl7.impl.parser.StringDataTypeReader"/>
+        </parts>
+    </type>
+    <type id="IS">
+        <description>coded value for userdefined tables</description>
+        <parts>
+            <part reader="com.browsersoft.openhre.hl7.impl.parser.StringDataTypeReader"/>
+        </parts>
+    </type>
+    <type id="FT">
+        <description>formatted text data</description>
+        <parts>
+            <part reader="com.browsersoft.openhre.hl7.impl.parser.StringDataTypeReader"/>
+        </parts>
+    </type>
+    <type id="SI">
+        <description>sequence ID</description>
+        <parts>
+            <part reader="com.browsersoft.openhre.hl7.impl.parser.StringDataTypeReader"/>
+        </parts>
+    </type>
+    <type id="DTM">
+        <description>date/time</description>
+        <parts>
+            <part reader="com.browsersoft.openhre.hl7.impl.parser.StringDataTypeReader"/>
+        </parts>
+    </type>
+    <type id="TS">
+        <description>time stamp - Format: YYYY[MM[DD[HHMM[SS[.S[S[S[S]]]]]]]][+/-ZZZZ]^degree of precision</description>
+        <parts>
+            <part description="Time" subtype="DTM"/>
+            <part description="Degree of Precision" subtype="ID"/>
+        </parts>
+    </type>
+    <type id="TX">
+        <description>text data</description>
+        <parts>
+            <part reader="com.browsersoft.openhre.hl7.impl.parser.StringDataTypeReader"/>
+        </parts>
+    </type>
+    <type id="HD">
+        <description>hierarchic designator</description>
+        <parts>
+            <part description="namespace ID" subtype="IS"/>
+            <part description="universal ID" subtype="ST"/>
+            <part description="universal ID type" subtype="ID"/>
+        </parts>
+    </type>
+    <type id="MSG">
+        <description>message type</description>
+        <parts>
+            <part description="Message Code" subtype="ID"/>
+            <part description="Trigger Event" subtype="ID"/>
+            <part description="Message Structure" subtype="ID"/>
+        </parts>
+    </type>
+    <type id="MO">
+        <description>money</description>
+        <parts>
+            <part description="quantity" subtype="NM"/>
+            <part description="denomination" subtype="ID"/>
+        </parts>
+    </type>
+    <type id="CE">
+        <description>coded element with formatted values</description>
+        <parts>
+            <part description="identifier" subtype="ST"/>
+            <part description="text" subtype="ST"/>
+            <part description="name of coding system" subtype="ID"/>
+            <part description="alternate identifier" subtype="ST"/>
+            <part description="alternate text" subtype="ST"/>
+            <part description="name of alternate coding system" subtype="ID"/>
+        </parts>
+    </type>
+    <type id="CNE">
+        <description>coded element with formatted values with no exceptions, used in v2.6</description>
+        <parts>
+            <part description="identifier" subtype="ST"/>
+            <part description="text" subtype="ST"/>
+            <part description="name of coding system" subtype="ID"/>
+            <part description="alternate identifier" subtype="ST"/>
+            <part description="alternate text" subtype="ST"/>
+            <part description="name of alternate coding system" subtype="ID"/>
+            <part description="Coding System Version ID" subtype="ST"/>
+            <part description="Alternate Coding System Version ID" subtype="ST"/>
+            <part description="Original Text" subtype="ST"/>
+        </parts>
+    </type>
+    <type id="CK">
+        <description>composite ID with check digit</description>
+        <parts>
+            <part description="ID number" subtype="NM"/>
+            <part description="check digit" subtype="NM"/>
+            <part description="code identifying the check digit scheme employed" subtype="ID"/>
+            <part description="assigning authority" subtype="HD"/>
+        </parts>
+    </type>
+    <type contentType="combination" id="CM">
+        <description>composite</description>
+        <parts/>
+    </type>
+    <type id="CP">
+        <description>composite price</description>
+        <parts>
+            <part description="price" subtype="MO"/>
+            <part description="price type" subtype="ID"/>
+            <part description="from value" subtype="NM"/>
+            <part description="to value" subtype="NM"/>
+            <part description="range units" subtype="CE"/>
+            <part description="range type" subtype="ID"/>
+        </parts>
+    </type>
+    <type id="CQ">
+        <description>composite quantity with units.  Units should be CE datatype according to hl7 2.5, but this causes
+        parsing issues because it is not a primitive type, and the TQ has CQ has a subcompenent so will not process properly
+        with the current parser logic.  Changing to ST to get around this for now.</description>
+        <parts>
+            <part description="quantity" subtype="NM"/>
+            <part description="units" subtype="ST"/>
+        </parts>
+    </type>
+    <type id="CX">
+        <description>extended composite ID with check digit</description>
+        <parts>
+            <part description="ID" subtype="ST" table="0203"/>
+            <part description="check digit" subtype="ST"/>
+            <part description="code identifying the check digit scheme employed" subtype="ID"/>
+            <part description="assigning authority" subtype="HD"/>
+            <part description="identifier type code" subtype="ID"/>
+            <part description="Assigning Facility" subtype="HD"/>
+            <part description="Effective Date" subtype="DT"/>
+            <part description="Expiration Date" subtype="DT"/>
+            <part description="Assigning Jurisdiction" subtype="CWE"/>
+            <part description="Assigning Agency or Department" subtype="CWE"/>
+        </parts>
+    </type>
+    <type id="DLN">
+        <description>drivers license number</description>
+        <parts>
+            <part description="license number" subtype="ST"/>
+            <part description="issuing state, province, country" subtype="IS"/>
+            <part description="expiration date" subtype="DT"/>
+        </parts>
+    </type>
+    <type id="EI">
+        <description>entity identifier</description>
+        <parts>
+            <part description="entity identifier" subtype="ST"/>
+            <part description="namespace ID" subtype="IS"/>
+            <part description="universal ID" subtype="ST"/>
+            <part description="universal ID type" subtype="ID"/>
+        </parts>
+    </type>
+    <type id="FC">
+        <description>financial class</description>
+        <parts>
+            <part description="financial class" subtype="IS"/>
+            <part description="effective date" subtype="TS"/>
+        </parts>
+    </type>
+    <type id="JCC">
+        <description>job code/class</description>
+        <parts>
+            <part description="job code" subtype="IS"/>
+            <part description="job class" subtype="IS"/>
+            <part description="Job Description Text" subtype="TX"/>
+        </parts>
+    </type>
+    <type id="PL">
+        <description>person location</description>
+        <parts>
+            <part description="point of care" subtype="IS"/>
+            <part description="room" subtype="IS"/>
+            <part description="bed" subtype="IS"/>
+            <part description="facility" subtype="HD"/>
+            <part description="location status" subtype="IS"/>
+            <part description="person location type" subtype="IS"/>
+            <part description="building" subtype="IS"/>
+            <part description="floor" subtype="IS"/>
+            <part description="location description" subtype="ST"/>
+            <part description="Comprehensive Location Identifier" subtype="EI"/>
+            <part description="Assigning Authority for Location" subtype="HD"/>
+        </parts>
+    </type>
+    <type id="PN">
+        <description>person name</description>
+        <parts>
+            <part description="family name" subtype="ST"/>
+            <part description="last name prefix" subtype="ST"/>
+            <part description="given name" subtype="ST"/>
+            <part description="middle initial or name" subtype="ST"/>
+            <part description="suffix (e.g., Jr. or III)" subtype="ST"/>
+            <part description="prefix (e.g., Dr.)" subtype="ST"/>
+            <part description="degree (e.g., MD)" subtype="IS" table="0360"/>
+        </parts>
+    </type>
+    <type id="PT">
+        <description>processing type</description>
+        <parts>
+            <part description="processing ID" subtype="ID"/>
+            <part description="processing mode" subtype="ID"/>
+        </parts>
+    </type>
+    <type id="TQ">
+        <description>timing quantity</description>
+        <parts>
+            <part description="quantity" subtype="CQ"/>
+            <part description="interval" subtype="RI"/>
+            <part description="duration" subtype="ST"/>
+            <part description="start date/time" subtype="TS"/>
+            <part description="end date/time" subtype="TS"/>
+            <part description="priority" subtype="ST"/>
+            <part description="condition" subtype="ST"/>
+            <part description="text" subtype="TX"/>
+            <part description="conjunction" subtype="ID"/>
+            <part description="order sequencing" subtype="OSD"/>
+            <part description="performance duration" subtype="CE"/>
+            <part description="total occurrences" subtype="NM"/>
+        </parts>
+    </type>
+    <type id="VID">
+        <description>version identifier</description>
+        <parts>
+            <part description="version ID" subtype="ID" table="0104"/>
+            <part description="internationalization code" subtype="CE" table="0212"/>
+            <part description="international version ID" subtype="CE"/>
+        </parts>
+    </type>
+    <type id="XAD">
+        <description>extended address</description>
+        <parts>
+            <part description="street address" subtype="SAD"/>
+            <part description="other designation" subtype="ST"/>
+            <part description="city" subtype="ST"/>
+            <part description="state or province" subtype="ST"/>
+            <part description="zip or postal code" subtype="ST"/>
+            <part description="country" subtype="ID" table="0212"/>
+            <part description="address type" subtype="ID" table="0190"/>
+            <part description="other geographic designation" subtype="ST"/>
+            <part description="county/parish code" subtype="IS" table="0289"/>
+            <part description="census tract" subtype="IS" table="0288"/>
+            <part description="address representation code" subtype="ID" table="4000"/>
+            <part description="Address Validity Range" subtype="DR"/>
+            <part description="Effective Date" subtype="TS"/>
+            <part description="Expiration Date" subtype="TS"/>
+        </parts>
+    </type>
+    <type id="XCN">
+        <description>extended composite ID number and name for persons</description>
+        <parts>
+            <part description="ID number" subtype="ST"/>
+            <part description="family name" subtype="ST"/>
+            <part description="last name prefix" subtype="ST"/>
+            <part description="given name" subtype="ST"/>
+            <part description="middle initial or name" subtype="ST"/>
+            <part description="suffix (e.g., Jr. or III)" subtype="ST"/>
+            <part description="prefix (e.g., Dr.)" subtype="ST"/>
+            <part description="degree (e.g., MD)" subtype="IS" table="0360"/>
+            <part description="source table" subtype="IS" table="0297"/>
+            <part description="assigning authority" subtype="HD"/>
+            <part description="name type code" subtype="ID" table="0200"/>
+            <part description="identifier check digit" subtype="ST"/>
+            <part description="code identifying the check digit scheme employed" subtype="ID"/>
+            <part description="identifier type code" subtype="IS" table="0203"/>
+            <part description="assigning facility ID" subtype="HD"/>
+            <part description="name representation code" subtype="ID" table="4000"/>
+            <part description="name context" subtype="CWE"/>
+            <part description="name validity range" subtype="DR"/>
+            <part description="name Assembly Order" subtype="ID"/>
+            <part description="effective Date" subtype="TS"/>
+            <part description="expiration Date" subtype="TS"/>
+            <part description="professional Suffix" subtype="ST"/>
+            <part description="assigning jurisdiction" subtype="CWE"/>
+            <part description="assigning agency or department" subtype="CWE"/>
+        </parts>
+    </type>
+    <type id="XON">
+        <description>extended composite name and identification number for organizations</description>
+        <parts>
+            <part description="organization name" subtype="ST"/>
+            <part description="organization name type code" subtype="IS" table="0204"/>
+            <part description="ID number" subtype="NM"/>
+            <part description="check digit" subtype="NM"/>
+            <part description="code identifying the check digit scheme employed" subtype="ID"/>
+            <part description="assigning authority" subtype="HD"/>
+            <part description="identifier type code" subtype="IS" table="0203"/>
+            <part description="assigning facility ID" subtype="HD"/>
+            <part description="name representation code" subtype="ID" table="4000"/>
+            <part description="Organization Identifier" subtype="ST"/>
+        </parts>
+    </type>
+    <type id="XPN">
+        <description>extended person name</description>
+        <parts>
+            <part description="family name" subtype="FN"/>
+            <part description="given name" subtype="ST"/>
+            <part description="Second and Further Given Names or Initials Thereof" subtype="ST"/>
+            <part description="suffix (e.g., Jr. or III)" subtype="ST"/>
+            <part description="prefix (e.g., Dr.)" subtype="ST"/>
+            <part description="degree (e.g., MD)" subtype="IS" table="0360"/>
+            <part description="name type code" subtype="ID" table="0200"/>
+            <part description="name representation code" subtype="ID" table="4000"/>
+            <part description="Name Context" subtype="CE"/>
+            <part description="Name validity range" subtype="DR"/>
+            <part description="Name Assembly Order" subtype="ID"/>
+            <part description="Effective Date" subtype="TS"/>
+            <part description="Expiration Date" subtype="TS"/>
+            <part description="Professional Suffix" subtype="ST"/>
+        </parts>
+    </type>
+    <type id="XTN">
+        <description>extended telecommunication number</description>
+        <parts>
+            <part description="Telephone Number" subtype="ST"/>
+            <part description="telecommunication use code" subtype="ID" table="0201"/>
+            <part description="telecommunication equipment type" subtype="ID" table="0202"/>
+            <part description="email address" subtype="ST"/>
+            <part description="country code" subtype="NM"/>
+            <part description="area/city code" subtype="NM"/>
+            <part description="phone number" subtype="NM"/>
+            <part description="extension" subtype="NM"/>
+            <part description="any text" subtype="ST"/>
+            <part description="Extension Prefix" subtype="ST"/>
+            <part description="Speed Dial Code" subtype="ST"/>
+            <part description="Unformatted Telephone number" subtype="ST"/>
+        </parts>
+    </type>
+    <type id="CWE">
+        <description>coded with exceptions</description>
+        <parts>
+            <part description="Identifier" subtype="ST"/>
+            <part description="Text" subtype="ST"/>
+            <part description="Name of Coding System" subtype="ID" table="0396"/>
+            <part description="Alternate Identifier" subtype="ST"/>
+            <part description="Alternate Text" subtype="ST"/>
+            <part description="Name of Alternate Coding System" subtype="ID" table="0396"/>
+            <part description="Coding System Version ID" subtype="ST"/>
+            <part description="Alternate Coding System Version ID" subtype="ST"/>
+            <part description="Original Text" subtype="ST"/>
+        </parts>
+    </type>
+    <type id="DLD">
+        <description>discharge to location and date</description>
+        <parts>
+            <part description="Discharge Location" subtype="IS"/>
+            <part description="Effective Date" subtype="TS"/>
+        </parts>
+    </type>
+    <type id="EIP">
+        <description>entity identifier pair</description>
+        <parts>
+            <part description="Placer Assigned Identifier" subtype="EI"/>
+            <part description="Filler Assigned Identifier" subtype="EI"/>
+        </parts>
+    </type>
+    <type id="SPS">
+        <description>specimen source</description>
+        <parts>
+            <part description="Specimen Source Name or Code" subtype="CWE"/>
+            <part description="Additives" subtype="CWE"/>
+            <part description="Specimen Collection Method" subtype="TX"/>
+            <part description="Body Site" subtype="CWE"/>
+            <part description="Site Modifier" subtype="CWE"/>
+            <part description="Collection Method Modifier Code" subtype="CWE"/>
+            <part description="Specimen Role" subtype="CWE"/>
+        </parts>
+    </type>
+    <type id="MOC">
+        <description>money and charge code</description>
+        <parts>
+            <part description="Monetary Amount" subtype="MO"/>
+            <part description="Charge Code" subtype="CE"/>
+        </parts>
+    </type>
+    <type id="PRL">
+        <description>parent result link</description>
+        <parts>
+            <part description="Parent Observation Identifier" subtype="CE"/>
+            <part description="Parent Observation Subidentifier" subtype="ST"/>
+            <part description="Parent Observation Value Descriptor" subtype="TX"/>
+        </parts>
+    </type>
+    <type id="NDL">
+        <description>name with date and location</description>
+        <parts>
+            <part description="Name" subtype="CNN"/>
+            <part description="Start Date/time" subtype="TS"/>
+            <part description="End Date/time" subtype="TS"/>
+            <part description="Point of Care" subtype="IS"/>
+            <part description="Room" subtype="IS"/>
+            <part description="Bed" subtype="IS"/>
+            <part description="Facility" subtype="HD"/>
+            <part description="Location Status" subtype="IS"/>
+            <part description="Patient Location Type" subtype="IS"/>
+            <part description="Building" subtype="IS"/>
+            <part description="Floor" subtype="IS"/>
+        </parts>
+    </type>
+    <type id="CNN">
+        <description>composite ID number and name simplified</description>
+        <parts>
+            <part description="ID Number" subtype="ST"/>
+            <part description="Family Name" subtype="ST"/>
+            <part description="Given Name" subtype="ST"/>
+            <part description="Second and Further Given Names or Initials Thereof" subtype="ST"/>
+            <part description="Suffix (e.g., JR or III)" subtype="ST"/>
+            <part description="Prefix (e.g., DR)" subtype="ST"/>
+            <part description="Degree (e.g., MD" subtype="IS"/>
+            <part description="Source Table" subtype="IS"/>
+            <part description="Assigning Authority - Namespace ID" subtype="IS"/>
+            <part description="Assigning Authority - UniversalID" subtype="ST"/>
+            <part description="Assigning Authority - Universal ID Type" subtype="ID"/>
+        </parts>
+    </type>
+    <type id="RI">
+        <description>repeat interval</description>
+        <parts>
+            <part description="Repeat Pattern" subtype="IS"/>
+            <part description="Explicit Time Interval" subtype="ST"/>
+        </parts>
+    </type>
+    <type id="OSD">
+        <description>order sequence definition</description>
+        <parts>
+            <part description="Sequence/Results Flag" subtype="ID"/>
+            <part description="Placer Order Number: Entity Identifier" subtype="ST"/>
+            <part description="Placer Order Number: Namespace ID" subtype="IS"/>
+            <part description="Filler Order Number: Entity Identifier" subtype="ST"/>
+            <part description="Filler Order Number: Namespace ID" subtype="IS"/>
+            <part description="Sequence Condition Value" subtype="ST"/>
+            <part description="Maximum Number of Repeats" subtype="NM"/>
+            <part description="Placer Order Number: Universal ID" subtype="ST"/>
+            <part description="Placer Order Number: Universal ID Type" subtype="ID"/>
+            <part description="Filler Order Number: Universal ID" subtype="ST"/>
+            <part description="Filler Order Number: Universal ID Type" subtype="ID"/>
+        </parts>
+    </type>
+    <type id="SAD">
+        <description>street address</description>
+        <parts>
+            <part description="Street or Mailing Address" subtype="ST"/>
+            <part description="Street Name" subtype="ST"/>
+            <part description="Dwelling Number" subtype="ST"/>
+        </parts>
+    </type>
+    <type id="DR">
+        <description>date/time range</description>
+        <parts>
+            <part description="Range Start Date/Time" subtype="ST"/>
+            <part description="Range End Date/Time" subtype="ST"/>
+        </parts>
+    </type>
+    <type id="FN">
+        <description>family name</description>
+        <parts>
+            <part description="Surname" subtype="ST"/>
+            <part description="Own Surname Prefix" subtype="ST"/>
+            <part description="Own Surname" subtype="ST"/>
+            <part description="Surname Prefix From Partner/Spouse" subtype="ST"/>
+            <part description="Surname From Partner/Spouse" subtype="ST"/>
+        </parts>
+    </type>
+    <type id="CRFR">
+        <description>Universal Interface extension: format range as | low- high^low^high For example, | 35-80^35^80 | In
+            HL7 version 2.31, The interface sends the Reference Range in field 7.1Document generated by Confluence on
+            Dec 31, 2009 11:09 Page 127 Range field. In HL7 version 2.3.1, The interface can use a routine argument of
+            REF_RANGE to break up the Reference Range into OBX-7.2 low and OBX-7.3 high
+        </description>
+        <parts>
+            <part description="Range" subtype="ST"/>
+            <part description="Low" subtype="ST"/>
+            <part description="High" subtype="ST"/>
+        </parts>
+    </type>
+    <type id="CRA">
+        <description>The interface provides as repeating instances of Value^ ValueType. HNA_ACCN identifiers the
+            unformatted HNA accession. HNA_ACCNID identifies the internal row identifier of the accession table. The
+            first occurrence will be HNA_ACCN and the second will be HNA_ACCNID. The comserver script will filter
+            components and values not needed by the receiving system. In HL7 version 2.5.1, the HNA_ACCN will be sent in
+            the SPM segment in the Filler field 2.2. and the HNA_ACCNID will not be sent outbound. Orders: When
+            processing this will be set from the ACCESSION_ORDER_R table. Clinical Event: When no order is present this
+            will be set from the CLINICAL_EVENT table. Helix: For PathNet Helix, the interface sends the Accession
+            number from the CLINICAL_EVENT Table
+        </description>
+        <parts>
+            <part description="Value" subtype="ST"/>
+            <part description="ValueType" subtype="ST"/>
+        </parts>
+    </type>
+    <type id="PPN">
+        <description>performing person time stamp</description>
+        <parts>
+            <part description="ID number" subtype="ST"/>
+            <part description="family name" subtype="ST"/>
+            <part description="given name" subtype="ST"/>
+            <part description="middle initial or name" subtype="ST"/>
+            <part description="suffix (e.g., Jr. or III)" subtype="ST"/>
+            <part description="prefix (e.g., Dr.)" subtype="ST"/>
+            <part description="degree (e.g., MD)" subtype="IS" table="0360"/>
+            <part description="source table" subtype="ID" table="0297"/>
+            <part description="assigning authority" subtype="HD"/>
+            <part description="name type code" subtype="ID" table="0200"/>
+            <part description="identifier check digit" subtype="ST"/>
+            <part description="code identifying the check digit scheme employed" subtype="ID"/>
+            <part description="identifier type code" subtype="ID" table="0203"/>
+            <part description="assigning facility ID" subtype="HD"/>
+            <part description="Date/time action performed" subtype="TS"/>
+        </parts>
+    </type>
+    <type id="CAT">
+        <description>Catch-All field with multiple plaintext ST fields</description>
+        <parts>
+            <part description="plaintext" subtype="ST"/>
+            <part description="plaintext" subtype="ST"/>
+            <part description="plaintext" subtype="ST"/>
+            <part description="plaintext" subtype="ST"/>
+            <part description="plaintext" subtype="ST"/>
+            <part description="plaintext" subtype="ST"/>
+            <part description="plaintext" subtype="ST"/>
+            <part description="plaintext" subtype="ST"/>
+            <part description="plaintext" subtype="ST"/>
+            <part description="plaintext" subtype="ST"/>
+            <part description="plaintext" subtype="ST"/>
+            <part description="plaintext" subtype="ST"/>
+            <part description="plaintext" subtype="ST"/>
+            <part description="plaintext" subtype="ST"/>
+            <part description="plaintext" subtype="ST"/>
+            <part description="plaintext" subtype="ST"/>
+            <part description="plaintext" subtype="ST"/>
+            <part description="plaintext" subtype="ST"/>
+        </parts>
+    </type>
+</types>

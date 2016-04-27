@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+
+    <mxlrecord name="allergy" policyGroup="allergies" dateField="DATE_REPORTED">
+        <string duplication="yes">SOURCE</string>
+        <string>ENCOUNTER_NUM</string>
+        <string>ENCOUNTER_ORIGIN</string>
+        <date>DOCUMENT_DATETIME</date>
+        <string duplication="yes">ALLERGY</string>
+        <string duplication="yes" cancontainsensitive="yes">ALLERGY_CODE</string>
+        <string>ALLERGY_CODE_SOURCE</string>
+        <string>ALLERGY_TYPE_CODE</string>
+        <string>ALLERGY_TYPE_DISP</string>
+        <string>CATEGORY</string>
+        <string>CATEGORY_CODE</string>
+        <string>REACTIONS</string>
+        <string>REACTIONS_CODE</string>
+        <date sorting="yes">DATE_REPORTED</date>
+        <string>SEVERITY</string>
+        <string>SEVERITY_CODE</string>
+        <string>REACTION_TYPE</string>
+        <string>STATUS</string>
+        <string>STATUS_CODE</string>
+        <string>LAST_UPDATED_BY_ID</string>
+        <string>LAST_UPDATED_BY_OID</string>
+        <string>LAST_UPDATED_BY_FIRST</string>
+        <string>LAST_UPDATED_BY_MIDDLE</string>
+        <string>LAST_UPDATED_BY_LAST</string>
+        <string>LAST_UPDATED_BY_SUFFIX</string>
+        <string>LAST_REVIEWED_BY_ID</string>
+        <string>LAST_REVIEWED_BY_OID</string>
+        <string>LAST_REVIEWED_BY_FIRST</string>
+        <string>LAST_REVIEWED_BY_MIDDLE</string>
+        <string>LAST_REVIEWED_BY_LAST</string>
+        <string>LAST_REVIEWED_BY_SUFFIX</string>
+        <blob>COMMENTS</blob>
+    </mxlrecord>
+
+    <mxlrecord name="encounter" filter="yes" policyGroup="visits" dateField="ADMIT_DATE">
+        <string duplication="no">SOURCE</string>
+        <string>ENCOUNTER_NUM</string>
+        <string>ENCOUNTER_ORIGIN</string>
+        <date>DOCUMENT_DATETIME</date>
+        <string>POINTOFCARE</string>
+        <string>FACILITY</string>
+        <string>BUILDING</string>
+        <string>ENCOUNTER_TYPE</string>
+        <string duplication="yes">ENCOUNTER_NUMBER</string>
+        <string>REASON</string>
+        <string>ATTENDING_PROVIDER_ID</string>
+        <string>ATTENDING_PROVIDER_ID_OID</string>
+        <string>ATTENDING_PROVIDER_FIRST</string>
+        <string>ATTENDING_PROVIDER_MIDDLE</string>
+        <string>ATTENDING_PROVIDER_LAST</string>
+        <string>ATTENDING_PROVIDER_SUFFIX</string>
+        <string>ATTENDING_PROVIDER_ADDRESS</string>
+        <string>ATTENDING_PROVIDER_CITY</string>
+        <string>ATTENDING_PROVIDER_STATE</string>
+        <string>ATTENDING_PROVIDER_POSTAL_CODE</string>
+        <string>ATTENDING_PROVIDER_TELECOM</string>
+        <date sorting="yes">ADMIT_DATE</date>
+        <date>DISCHARGE_DATE</date>
+        <string>STATUS</string>
+
+    </mxlrecord>
+
+    <mxlrecord name="immunization" policyGroup="immunizations" dateField="DATE_GIVEN">
+        <string duplication="yes">SOURCE</string>
+        <string>ENCOUNTER_NUM</string>
+        <string>ENCOUNTER_ORIGIN</string>
+        <date>DOCUMENT_DATETIME</date>
+        <string duplication="yes">IMMUNIZATION</string>
+        <string duplication="yes" cancontainsensitive="yes">IMMUNIZATION_CODE</string>
+        <string>IMMUNIZATION_CODE_SOURCE</string>
+        <date duplication="yes" sorting="yes" desc="yes">DATE_GIVEN</date>
+        <string>ROUTE</string>
+        <string>ROUTE_CODE</string>
+        <string>SITE</string>
+        <string>MANUFACTURER</string>
+        <string>LOT</string>
+        <string>DOSE_QTY</string>
+        <string>DOSE_QTY_UNIT</string>
+        <string>NOTE</string>
+        <string>STATUS</string>
+        <string>LAST_UPDATED_BY_ID</string>
+        <string>LAST_UPDATED_BY_ID_OID</string>
+        <string>LAST_UPDATED_BY_FIRST</string>
+        <string>LAST_UPDATED_BY_MIDDLE</string>
+        <string>LAST_UPDATED_BY_LAST</string>
+        <string>LAST_UPDATED_BY_SUFFIX</string>
+    </mxlrecord>
+
+    <mxlrecord name="lab_result" filter="yes" policyGroup="lab_results" dateField="RESULT_DATE">
+        <string duplication="yes">SUB_TYPE</string>
+        <string duplication="yes">SOURCE</string>
+        <string>SUB_DATA_TYPE</string>
+        <string>ENCOUNTER_NUM</string>
+        <string>ENCOUNTER_ORIGIN</string>
+        <date>DOCUMENT_DATETIME</date>
+        <string>DATA_TYPE</string>
+        <string duplication="yes">RESULT_ID</string>
+        <string>RESULT</string>
+        <string cancontainsensitive="yes">RESULT_CODE</string>
+        <string>RESULT_CODE_SOURCE</string>
+        <string>VALUE</string>
+        <string>VALUE_UNIT</string>
+        <string>VALUE_TRANSLATION_UNIT</string>
+        <string>VALUE_DATA_TYPE</string>
+        <string>LOW_VALUE</string>
+        <string>HIGH_VALUE</string>
+        <string>INTERPRETATION</string>
+        <string>INTERPRETATION_CODE</string>
+        <date duplication="yes" sorting="yes" desc="yes">RESULT_DATE</date>
+        <string>STATUS</string>
+        <string duplication="yes" sorting="yes">ORDER_NAME</string>
+        <string>ORDER_CODE</string>
+        <string>ORDER_CODE_SOURCE</string>
+        <string>ORDER_ALIAS</string>
+        <blob>COMMENTS</blob>
+        <string>PERFORMER_ID</string>
+        <string>PERFORMER_ID_OID</string>
+        <string>PERFORMER_FIRST</string>
+        <string>PERFORMER_MIDDLE</string>
+        <string>PERFORMER_LAST</string>
+        <string>PERFORMER_SUFFIX</string>
+        <string>VERIFIER_ID</string>
+        <string>VERIFIER_ID_OID</string>
+        <string>VERIFIER_FIRST</string>
+        <string>VERIFIER_MIDDLE</string>
+        <string>VERIFIER_LAST</string>
+        <string>VERIFIER_SUFFIX</string>
+        <string>ORDERING_PROVIDER_ID</string>
+        <string>ORDERING_PROVIDER_ID_OID</string>
+        <string>ORDERING_PROVIDER_FIRST</string>
+        <string>ORDERING_PROVIDER_MIDDLE</string>
+        <string>ORDERING_PROVIDER_LAST</string>
+        <string>ORDERING_PROVIDER_SUFFIX</string>
+        <string>ORGANIZER_ID</string>
+        <string>RESULT_ID_ALIAS</string>
+        <string>RESULT_IBOX_TEXT</string>
+        <string>IBOX_CAPTION</string>
+    </mxlrecord>
+
+    <mxlrecord name="medication" policyGroup="medications" dateField="ORDER_DATE">
+        <string duplication="yes">SOURCE</string>
+        <string>ENCOUNTER_NUM</string>
+        <string>ENCOUNTER_ORIGIN</string>
+        <date>DOCUMENT_DATETIME</date>
+        <string>ORDER_ALIAS</string>
+        <date>ORDER_STOP_DATE</date>
+        <string duplication="yes">MEDICATION</string>
+        <string duplication="yes" cancontainsensitive="yes">MEDICATION_CODE</string>
+        <string>MEDICATION_CODE_SOURCE</string>
+        <string>DOSE_QTY</string>
+        <string>DOSE_QTY_UNIT</string>
+        <string>RATE_QTY</string>
+        <string>RATE_QTY_UNIT</string>
+        <string>PRN_IND</string>
+        <string>PRN_TEXT</string>
+        <string>ROUTE</string>
+        <string>ROUTE_DISPLAY</string>
+        <string>DISPENSE</string>
+        <string>DISPENSE_UNITS</string>
+        <string>REFILLS</string>
+        <string>STATUS</string>
+        <string>STATUS_CODE</string>
+        <string>INSTRUCTIONS</string>
+        <string>ORDERING_PROVIDER_ID</string>
+        <string>ORDERING_PROVIDER_ID_OID</string>
+        <string>ORDERING_PROVIDER_FIRST</string>
+        <string>ORDERING_PROVIDER_MIDDLE</string>
+        <string>ORDERING_PROVIDER_LAST</string>
+        <string>ORDERING_PROVIDER_SUFFIX</string>
+        <string>LAST_REVIEWED_BY_ID</string>
+        <string>LAST_REVIEWED_BY_ID_OID</string>
+        <string>LAST_REVIEWED_BY_FIRST</string>
+        <string>LAST_REVIEWED_BY_MIDDLE</string>
+        <string>LAST_REVIEWED_BY_LAST</string>
+        <string>LAST_REVIEWED_BY_SUFFIX</string>
+        <date duplication="yes" sorting="yes" desc="yes">ORDER_DATE</date>
+        <string>DETAIL_LINE</string>
+    </mxlrecord>
+
+    <mxlrecord name="procedure" filter="yes" policyGroup="procedures" dateField="PROCEDURE_DATETIME">
+        <string duplication="yes">SOURCE</string>
+        <string>ENCOUNTER_NUM</string>
+        <string>ENCOUNTER_ORIGIN</string>
+        <date>DOCUMENT_DATETIME</date>
+        <string duplication="yes">PROCEDURE</string>
+        <string duplication="yes" cancontainsensitive="yes">PROCEDURE_CODE</string>
+        <string>PROCEDURE_CODE_SOURCE</string>
+        <string>PROCEDURE_CODE_SOURCE_NAME</string>
+        <string>SURGEON_ID</string>
+        <string>SURGEON_ID_OID</string>
+        <string>SURGEON_FIRST</string>
+        <string>SURGEON_MIDDLE</string>
+        <string>SURGEON_LAST</string>
+        <string>SURGEON_SUFFIX</string>
+        <date duplication="yes" sorting="yes" desc="yes">PROCEDURE_DATETIME</date>
+        <blob>COMMENTS</blob>
+    </mxlrecord>
+
+    <mxlrecord name="problem" filter="yes" dateField="ONSET_DATE">
+        <policyGroup id="conditions" subType="Condition"/>
+        <policyGroup id="diagnosis" subType="Diagnosis"/>
+        <string duplication="yes">SUB_TYPE</string>
+        <string duplication="yes">SOURCE</string>
+        <string>ENCOUNTER_NUM</string>
+        <string>ENCOUNTER_ORIGIN</string>
+        <date>DOCUMENT_DATETIME</date>
+        <string duplication="yes">PROBLEM</string>
+        <string duplication="yes" cancontainsensitive="yes">PROBLEM_SOURCE</string>
+        <string>PROBLEM_CODE_SYSTEM</string>
+        <string>PROBLEM_CODE_NAME</string>
+        <string>PROBLEM_TYPE_CODE</string>
+        <string>PROBLEM_TYPE_CODE_DISP</string>
+        <string>STATUS</string>
+        <string>STATUS_CODE</string>
+        <date sorting="yes" desc="yes">ONSET_DATE</date>
+        <date>ACTION_DATE</date>
+        <string>CLASSIFICATION</string>
+        <string>CLASSIFICATION_CODE</string>
+        <blob>COMMENTS</blob>
+        <string>MSG_ID</string>
+        <string>DIAGNOSIS_TYPE</string>
+        <string>DIAGNOSIS_PRIORITY</string>
+    </mxlrecord>
+
+    <mxlrecord name="vital" filter="yes" policyGroup="vital_signs" dateField="OBSERVATION_DATE">
+        <string duplication="yes">SOURCE</string>
+        <string>ENCOUNTER_NUM</string>
+        <string>ENCOUNTER_ORIGIN</string>
+        <date>DOCUMENT_DATETIME</date>
+        <string>MEASUREMENT_ID</string>
+        <string duplication="yes">MEASUREMENT_NAME</string>
+        <string duplication="yes" cancontainsensitive="yes">MEASUREMENT_CODE</string>
+        <string>MEASUREMENT_CODE_SOURCE</string>
+        <string>ROUTE</string>
+        <string>SITE</string>
+        <string>VALUE</string>
+        <string>VALUE_UNIT</string>
+        <string>VALUE_DATA_TYPE</string>
+        <string>LOW_VALUE</string>
+        <string>HIGH_VALUE</string>
+        <string>INTERPRETATION</string>
+        <string>INTERPRETATION_CODE</string>
+        <string>STATUS</string>
+        <date duplication="yes" sorting="yes" desc="yes">OBSERVATION_DATE</date>
+        <string>ORDER_NAME</string>
+        <string>ORDER_CODE</string>
+        <string>ORDER_CODE_SOURCE</string>
+        <string>ORDER_ALIAS</string>
+        <blob>COMMENTS</blob>
+        <string>RESULTED_BY_ID</string>
+        <string>RESULTED_BY_ID_OID</string>
+        <string>RESULTED_BY_FIRST</string>
+        <string>RESULTED_BY_MIDDLE</string>
+        <string>RESULTED_BY_LAST</string>
+        <string>RESULTED_BY_SUFFIX</string>
+        <string>VERIFIER_ID</string>
+        <string>VERIFIER_ID_OID</string>
+        <string>VERIFIER_FIRST</string>
+        <string>VERIFIER_MIDDLE</string>
+        <string>VERIFIER_LAST</string>
+        <string>VERIFIER_SUFFIX</string>
+        <string>ORDERING_PROVIDER_ID</string>
+        <string>ORDERING_PROVIDER_ID_OID</string>
+        <string>ORDERING_PROVIDER_FIRST</string>
+        <string>ORDERING_PROVIDER_MIDDLE</string>
+        <string>ORDERING_PROVIDER_LAST</string>
+        <string>ORDERING_PROVIDER_SUFFIX</string>
+    </mxlrecord>
+
+    <mxlrecord name="micro" filter="yes" policyGroup="microbiology" dateField="RESULT_DATE">
+        <string duplication="yes">SOURCE</string>
+        <string>SUB_DATA_TYPE</string>
+        <string>ENCOUNTER_NUM</string>
+        <string>ENCOUNTER_ORIGIN</string>
+        <string>ENCOUNTER_LOCATION</string>
+        <date>DOCUMENT_DATETIME</date>
+        <string>DATA_TYPE</string>
+        <string>RESULT_ID</string>
+        <string>ORDER_NAME</string>
+        <string>ORDER_CODE</string>
+        <string>ORDER_CODE_SOURCE</string>
+        <string>ORDER_ALIAS</string>
+        <string duplication="yes">RESULT</string>
+        <string duplication="yes" cancontainsensitive="yes">RESULT_CODE</string>
+        <string>RESULT_CODE_SOURCE</string>
+        <blob>VALUE</blob>
+        <string>VALUE_DATA_TYPE</string>
+        <string>SPECIMEN_SOURCE</string>
+        <string>SPECIMEN_SITE</string>
+        <string>LOW_VALUE</string>
+        <string>HIGH_VALUE</string>
+        <string>INTERPRETATION</string>
+        <string>INTERPRETATION_CODE</string>
+        <string>ORDERING_PROVIDER_ID</string>
+        <string>ORDERING_PROVIDER_ID_OID</string>
+        <string>ORDERING_PROVIDER_FIRST</string>
+        <string>ORDERING_PROVIDER_MIDDLE</string>
+        <string>ORDERING_PROVIDER_LAST</string>
+        <string>ORDERING_PROVIDER_SUFFIX</string>
+        <string>STATUS</string>
+        <blob>COMMENTS</blob>
+        <date duplication="yes" sorting="yes" desc="yes">RESULT_DATE</date>
+        <string>VERIFIER_ID</string>
+        <string>VERIFIER_ID_OID</string>
+        <string>VERIFIER_FIRST</string>
+        <string>VERIFIER_MIDDLE</string>
+        <string>VERIFIER_LAST</string>
+        <string>VERIFIER_SUFFIX</string>
+        <string>PERFORMER_ID</string>
+        <string>PERFORMER_ID_OID</string>
+        <string>PERFORMER_FIRST</string>
+        <string>PERFORMER_MIDDLE</string>
+        <string>PERFORMER_LAST</string>
+        <string>PERFORMER_SUFFIX</string>
+        <string>EVENT_TITLE</string>
+        <string>VALUE_UNIT</string>
+        <date>VERIFY_DATE</date>
+        <date>PERFORM_DATE</date>
+        <string>PATIENT_TYPE</string>
+        <string>ACCESSION_NBR</string>
+        <array type="susceptibility">SUSCEPTIBLITIES</array>
+    </mxlrecord>
+
+    <mxlrecord name="result" filter="yes" dateField="RESULT_DATE">
+        <policyGroup id="lab_orders" subType="Result-order"/>
+        <policyGroup id="anatomic_pathology" subType="anatomic-pathology"/>
+        <policyGroup id="radiology" subType="radiology"/>
+        <policyGroup id="history_and_physical" subType="history-physical"/>
+        <policyGroup id="discharge_summary" subType="discharge-summary"/>
+        <policyGroup id="provider_reports" subType="other-reports"/>
+        <policyGroup id="clinical_documents" subType="clinical-documents"/>
+        <policyGroup id="advanced_directive" subType="advanced-directive"/>
+        <policyGroup id="plan_of_care" subType="plan-of-care"/>
+        <policyGroup id="family_history" subType="family-history"/>
+        <policyGroup id="social_history" subType="social-history"/>
+        <string duplication="yes">SUB_TYPE</string>
+        <string duplication="yes">SOURCE</string>
+        <string>ENCOUNTER_NUM</string>
+        <string>SUB_DATA_TYPE</string>
+        <string>ENCOUNTER_ORIGIN</string>
+        <date>DOCUMENT_DATETIME</date>
+        <string>DATA_TYPE</string>
+        <string duplication="no">RESULT_ID</string>
+        <string>IBOX_CAPTION</string>
+        <string>RESULT_IBOX_TEXT</string>
+        <string duplication="yes">RESULT</string>
+        <string duplication="yes" cancontainsensitive="yes">RESULT_CODE</string>
+        <date duplication="no" sorting="yes" desc="yes">RESULT_DATE</date>
+        <blob>COMMENTS</blob>
+        <string>RESULT_CODE_SOURCE</string>
+        <string>EVENT_TITLE</string>
+        <blob>VALUE</blob>
+        <string>VALUE_DATA_TYPE</string>
+        <string>ORDERING_PROVIDER_ID</string>
+        <string>ORDERING_PROVIDER_ID_OID</string>
+        <string>ORDERING_PROVIDER_FIRST</string>
+        <string>ORDERING_PROVIDER_MIDDLE</string>
+        <string>ORDERING_PROVIDER_LAST</string>
+        <string>ORDERING_PROVIDER_SUFFIX</string>
+        <string>PERFORMER_ID</string>
+        <string>PERFORMER_ID_OID</string>
+        <string>PERFORMER_FIRST</string>
+        <string>PERFORMER_MIDDLE</string>
+        <string>PERFORMER_LAST</string>
+        <string>PERFORMER_SUFFIX</string>
+        <string>VERIFIER_ID</string>
+        <string>VERIFIER_ID_OID</string>
+        <string>VERIFIER_FIRST</string>
+        <string>VERIFIER_MIDDLE</string>
+        <string>VERIFIER_LAST</string>
+        <string>VERIFIER_SUFFIX</string>
+        <date>VERIFY_DATE</date>
+        <date>PERFORM_DATE</date>
+        <string>PATIENT_TYPE</string>
+        <string>ENCOUNTER_LOCATION</string>
+        <string>STATUS</string>
+        <string>ORDER_NAME</string>
+        <string>ORDER_CODE</string>
+        <string>ORDER_CODE_SOURCE</string>
+        <string>ACCESSION_NBR</string>
+    </mxlrecord>
+
+    <mxlrecord name="appointment" filter="yes" policyGroup="appointments" dateField="APPTDATETIME">
+        <string>SOURCE</string>
+        <string>APPT_ID</string>
+        <string>APPT_STATUS_CD</string>
+        <string>APPT_STATUS</string>
+        <date>APPT_DATE_TIME</date>
+        <string>APPT_TYPE_CD</string>
+        <string>APPT_TYPE</string>
+        <string>POINTOFCARE</string>
+        <string>FACILITY</string>
+        <string>CONSULTANT_ID</string>
+        <string>CONSULTANT_ID_OID</string>
+        <string>CONSULTANT_FIRST</string>
+        <string>CONSULTANT_MIDDLE</string>
+        <string>CONSULTANT_LAST</string>
+        <string>CONSULTANT_SUFFIX</string>
+    </mxlrecord>
+
+    <datatype name="susceptibility">
+        <string>ORGANISM</string>
+        <string>TEST_DIL_HEADER</string>
+        <string>TEST_METHOD</string>
+        <string>TEST_INTERP_HEADER</string>
+        <string>ANTIBIOTIC_NAME</string>
+        <string>ANTIBIOTIC_RESULT</string>
+        <string>ANTIBIOTIC_INTERP</string>
+        <string>ANTIBIOTIC_NOTE</string>
+    </datatype>
+
+
+</model>

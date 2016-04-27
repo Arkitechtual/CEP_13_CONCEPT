@@ -1,0 +1,58 @@
+[#
+   Message: SIU
+#]
+Template {#
+<%
+	String strAppId = input.get("SCH.1/EI.1");
+	String strAppStatusCd = input.get("SCH.25/CE.1");
+	String strAppStatus = engine.callRule("ApptStatusTable", strAppStatusCd, data);
+    if(strAppStatus.toString().equals("")){
+     	strAppStatus = input.get("SCH.25/CE.2");
+    }
+	String strApptDateTime = input.get("SCH.11/CAT.4");
+	String strApptTypeCd = input.get("SCH.7/CE.1");
+	String strApptType = engine.callRule("ApptTypeTable", strApptTypeCd, data);
+    if(strApptType.toString().equals("")){
+     	strApptType = input.get("SCH.7/CE.2");
+    }
+	String strConsultantLast = input.get("PV1.7/XCN.2").toString();
+	String strConsultantFirst = input.get("PV1.7/XCN.3").toString();
+    %>
+        <appointment>
+            <SOURCE><%= data.get("source") %></SOURCE>
+			<APPT_ID><%= strAppId %></APPT_ID>
+			<APPT_STATUS_CD><%= strAppStatusCd %></APPT_STATUS_CD>
+			<APPT_STATUS><%= strAppStatus %></APPT_STATUS>
+            <APPT_DATE_TIME><%= strApptDateTime %></APPT_DATE_TIME>
+			<APPT_TYPE_CD><%= strApptTypeCd %></APPT_TYPE_CD>
+			<APPT_TYPE><%= strApptType %></APPT_TYPE>
+		    <%= engine.callRule("DepartmentProcessing", input.get("DEPARTMENT"), data,true) %>
+			<%	if(!strConsultantLast.equals("")){ %>
+				<CONSULTANT_ID></CONSULTANT_ID>
+				<CONSULTANT_ID_OID></CONSULTANT_ID_OID>
+				<CONSULTANT_FIRST><%= strConsultantFirst %></CONSULTANT_FIRST>
+				<CONSULTANT_MIDDLE></CONSULTANT_MIDDLE>
+				<CONSULTANT_LAST><%= strConsultantLast %></CONSULTANT_LAST>
+				<CONSULTANT_SUFFIX></CONSULTANT_SUFFIX>
+			<% } %>
+        </appointment>
+#}
+
+[#
+   Id: DepartmentProcessing
+#]
+Template {#<%
+ 	String strNurseUnit;
+ 	String strFacility;
+	String strDeptLocPV1 = engine.callRule("DeptLocPV1", data.get("source").toString(), data);
+
+    if(strDeptLocPV1.toString().equals("1")){
+     	strFacility = parentinput.get("PV1.3/PL.4/HD.1");
+     	strNurseUnit = parentinput.get("PV1.3/PL.1");
+    } else {
+   		strFacility = input.get("AIL.3/PL.4/HD.1");
+   		strNurseUnit = input.get("AIL.3/PL.1");
+    }
+  
+ %><POINTOFCARE><%= strNurseUnit%></POINTOFCARE>
+ <FACILITY><%= strFacility%></FACILITY>#}

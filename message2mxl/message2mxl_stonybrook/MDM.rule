@@ -1,0 +1,88 @@
+[#
+   Message: MDM
+#]
+Template {#
+<% 
+    String sReportCode = input.get("TXA.2/CE.1");
+
+    String sStatus = engine.callRule("StatusCodeTable", input.get("TXA.17"), data);
+    if(sStatus.equals("")) {
+        sStatus="completed";
+    }
+
+    String strReportID = input.get("TXA.12/EI.1");
+    if(strReportID.equals("")){ //for Stanlisaus, the clinical summary is a patient summary with no specific ID, using MRN, so each clinical summary will overwrite the previous one
+        strReportID=data.get("patientMRN");
+    }
+
+    String strReportDate = "";
+    if(input.get("TXA.4/TS.1").equals("")) {
+        strReportDate=input.get("TXA.6/TS.1");
+    } else {
+        strReportDate=input.get("TXA.4/TS.1");
+    }
+
+    String strReportTextType = "";
+    input_vars.put("obx_data_type","");
+    if (engine.callRule("ResultValueDataType", data.get("result_alias_group").toString() + globalinput.get("MSH.5/HD.1"), data).toString().equals("rtf")) {
+        strReportTextType="ED";
+        input_vars.put("obx_data_type","RTF");
+    } else {
+        strReportTextType = input.get("TXA.3");
+    }
+
+    String strReportName = input.get("TXA.2/CE.2");
+    if(strReportName.equals("")){
+        strReportName = engine.callRule("ReportNameTable", data.get("result_alias_group").toString() + sReportCode, data);
+    }
+    String strReportType = engine.callRule("ReportTypeTable", data.get("result_alias_group").toString() + sReportCode, data);
+
+    if (strReportName.length() > 0 && strReportType.length() > 0) {
+    %>
+
+        <result>
+            <SUB_TYPE><%= strReportType %></SUB_TYPE>
+            <SOURCE><%= data.get("source") %></SOURCE>
+            <DOCUMENT_DATETIME><%= globalinput.get("MSH.7/TS.1") %></DOCUMENT_DATETIME>
+            <DATA_TYPE><%= strReportType %></DATA_TYPE>
+            <ORDER_NAME><%= strReportName %></ORDER_NAME>
+            <ORDER_CODE><%= strReportType %></ORDER_CODE>
+            <ORDER_CODE_SOURCE>2.16.840.1.113883.6.96</ORDER_CODE_SOURCE>
+            <RESULT_ID><%= strReportID %></RESULT_ID>
+            <RESULT><%= strReportName %></RESULT>
+            <RESULT_CODE><%= sReportCode %></RESULT_CODE>
+            <RESULT_DATE><%= strReportDate %></RESULT_DATE>
+            <COMMENTS><%= engine.callRule("PathologyReportNote", input.get("RESULT"), data,true) %></COMMENTS>
+            <RESULT_CODE_SOURCE><%= data.get("source") %></RESULT_CODE_SOURCE>
+            <EVENT_TITLE><%= strReportName %></EVENT_TITLE>
+            <VALUE><%= engine.callRule("PathologyReport", input.get("RESULT"), data,true) %></VALUE>
+            <VALUE_DATA_TYPE><%= strReportTextType %></VALUE_DATA_TYPE>
+            <PERFORMER_ID><%= input.get("TXA.9/XCN.1") %></PERFORMER_ID>
+            <PERFORMER_ID_OID></PERFORMER_ID_OID>
+            <PERFORMER_FIRST><%= input.get("TXA.9/XCN.3") %></PERFORMER_FIRST>
+            <PERFORMER_MIDDLE><%= input.get("TXA.9/XCN.4") %></PERFORMER_MIDDLE>
+            <PERFORMER_LAST><%= input.get("TXA.9/XCN.2") %></PERFORMER_LAST>
+            <PERFORMER_SUFFIX><%= input.get("TXA.9/XCN.5") %></PERFORMER_SUFFIX>
+            <VERIFIER_ID><%= input.get("TXA.10/XCN.1") %></VERIFIER_ID>
+            <VERIFIER_ID_OID></VERIFIER_ID_OID>
+            <VERIFIER_FIRST><%= input.get("TXA.10/XCN.3") %></VERIFIER_FIRST>
+            <VERIFIER_MIDDLE><%= input.get("TXA.10/XCN.4") %></VERIFIER_MIDDLE>
+            <VERIFIER_LAST><%= input.get("TXA.10/XCN.2") %></VERIFIER_LAST>
+            <VERIFIER_SUFFIX><%= input.get("TXA.10/XCN.5") %></VERIFIER_SUFFIX>
+            <ORDERING_PROVIDER_ID></ORDERING_PROVIDER_ID>
+            <ORDERING_PROVIDER_ID_OID></ORDERING_PROVIDER_ID_OID>
+            <ORDERING_PROVIDER_FIRST></ORDERING_PROVIDER_FIRST>
+            <ORDERING_PROVIDER_MIDDLE></ORDERING_PROVIDER_MIDDLE>
+            <ORDERING_PROVIDER_LAST></ORDERING_PROVIDER_LAST>
+            <ORDERING_PROVIDER_SUFFIX></ORDERING_PROVIDER_SUFFIX>
+            <VERIFY_DATE><%= input.get("TXA.6/TS.1") %></VERIFY_DATE>
+            <PERFORM_DATE><%= input.get("TXA.6/TS.1") %></PERFORM_DATE>
+            <PATIENT_TYPE><%= globalinput.get("PV1.18") %></PATIENT_TYPE>
+            <ENCOUNTER_LOCATION><%= globalinput.get("PV1.3/PL.4/HD.1") %></ENCOUNTER_LOCATION>
+            <STATUS><%= sStatus %></STATUS>
+            <ENCOUNTER_NUM><%=data.get("encounter_alias").toString() %></ENCOUNTER_NUM>
+            <ENCOUNTER_ORIGIN><%=data.get("encounter_origin").toString() %></ENCOUNTER_ORIGIN>
+        </result>
+    <%
+    } %>
+#}

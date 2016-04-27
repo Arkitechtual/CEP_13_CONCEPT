@@ -1,0 +1,76 @@
+
+[#
+   Always
+#]
+Template {#
+    <%// context.debug("Some debug message") %>
+    <map>
+       <item name="last_name" value="<%= input.get("PID.5/XPN.1/FN.1") %>"/>
+       <item name="first_name" value="<%= input.get("PID.5/XPN.2") %>"/>
+       <item name="middle_name" value="<%= input.get("PID.5/XPN.3") %>"/>
+       <item name="suffix" value="<%= input.get("PID.5/XPN.4") %>"/>
+       <% String tempBD=input.get("PID.7/TS.1");
+            if(tempBD != null && !tempBD.equals("") && tempBD.length() > 8 ) {tempBD=tempBD.substring(0,8)}%>
+       <item name="birth_date" value="<%= tempBD %>"/>
+       <% String tempG=input.get("PID.8");
+            if(tempG != null && (tempG.equals("U") || tempG.equals("I"))) {tempG="UN"}%>
+       <item name="gender" value="<%= tempG %>"/>
+       <!--<item name="race" value="<%= input.get("PID.10/CE.1") %>"/>-->
+       <item name="street_1" value="<%= input.get("PID.11/XAD.1/SAD.1") %>"/>
+       <item name="street_2" value="<%= input.get("PID.11/XAD.2") %>"/>
+       <item name="city" value="<%= input.get("PID.11/XAD.3") %>"/>
+       <item name="state" value="<%= input.get("PID.11/XAD.4") %>"/>
+       <item name="zip" value="<%= input.get("PID.11/XAD.5") %>"/>
+       <!--<item name="language" value="<%= input.get("PID.15/CE.1") %>"/>
+       <item name="marital_status" value="<%= input.get("PID.16/CE.1") %>"/>
+       <item name="religion" value="<%= input.get("PID.17/CE.1") %>"/>-->
+       <item name="encntr_id" value="<%= input.get("PID.18/CX.1") %>"/>
+       <item name="encntr_id_assign_auth" value="<%= input.get("PID.18/CX.4/HD.1") %>"/>
+       <%  temp =  input.get("PID.19").toString();
+          if(!temp.equals("&quot;&quot;")){
+                           temp= temp.replaceAll(/\D/, "");}%>
+       <item name="ssn" value="<%= temp %>"/>
+       <!--<item name="ethnicity" value="<%= input.get("PID.22/CE.1") %>"/>-->
+       <!--<item name="nationality" value="<%= input.get("PID.28/CE.1") %>"/>-->
+       <!--<item name="citizenship" value="<%= input.get("PID.26/CE.1") %>"/>-->
+       <item name="county" value="<%= input.get("PID.11/XAD.9") %>"/>
+       <item name="country_code" value="<%= input.get("PID.11/XAD.6") %>"/>
+       <%  temp =  input.get("PID.14/XTN.1").toString();
+          if(!temp.equals("&quot;&quot;")){
+                           temp= temp.replaceAll(/\D/, "");}%>
+       <item name="work_phone" value="<%= temp %>"/>
+       <item name="merge_mrn" value="<%= input.get("MRG.1/CX.1") %>"/>
+       <item name="merge_assign_auth" value="<%= input.get("MRG.1/CX.4/HD.1") %>"/>
+       <item name="pcp_id" value="<%= input.get("PV1.52/XCN.1") %>"/>
+       <item name="pcp_first_name" value="<%= input.get("PV1.52/XCN.3") %>"/>
+       <item name="pcp_middle_name" value="<%= input.get("PV1.52/XCN.4") %>"/>
+       <item name="pcp_last_name" value="<%= input.get("PV1.52/XCN.2") %>"/>
+       <% String tempConsent=input.get("ZCN.11/CE.2");
+            if(tempConsent != null && tempConsent.equals("N") ) {tempConsent="OUT"}
+            else if(tempConsent != null && tempConsent.equals("Y") ) {tempConsent="&quot;&quot;";}
+            else {tempConsent="";}%>
+       <item name="opt_status" value="<%= tempConsent %>"/>
+       <!--<item name="cmrn" value="<%= input.get("PID.2/CX.1") %>"/>-->
+       <%= engine.callRule("PhoneProcessing", input.get("PID.13R"), data,true)%>
+    </map>
+
+#}
+
+[#
+   ID: PhoneProcessing
+#]
+
+Template {#<%
+    if(index==0){
+        if(input.get("XTN.2").toString().equals("NET")){
+             %><item name="home_email" value="<%= input.get("XTN.4") %>"/><%
+        } else {
+            String temp =  input.get("XTN.1") ;
+              if(!temp.equals("&quot;&quot;")){
+                     temp= temp.replaceAll(/\D/, "");}%>
+            <item name="home_phone" value="<%= temp %>"/><%
+        }
+    } else if(input.get("XTN.2").toString().equals("NET")){
+        %><item name="home_email" value="<%= input.get("XTN.4") %>"/><%
+    }
+%>#}

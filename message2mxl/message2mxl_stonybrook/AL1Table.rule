@@ -1,0 +1,78 @@
+/* Code system transformation template */
+[#
+  ID: AllergySeverityCdTable
+#]
+Table {#
+Low = 255604002
+Mild = 255604002
+Medium = 6736007
+Severe = 24484000
+#}
+
+[#
+  ID: AllergySeverityTable
+#]
+Table {#
+255604002 = Low
+255604002 = Mild
+6736007 = Medium
+24484000 = Severe
+LT = Life Threatening
+MD = Mild
+MO = Moderate
+SV = Severe
+UK = Unknown
+U = Unknown
+#}
+
+[#
+  ID: AllergyCategoryCdTable
+#]
+Table {#
+Drug = DALG
+Environment = EALG
+Environmental = EALG
+Food = FALG
+DA = DALG
+EA = EALG
+OA = FALG
+UA = FALG
+#}
+
+[#
+  ID: AllergyCategoryTable
+#]
+Table {#
+DA = Drug
+EA = Environment
+Environmental = Environment
+FA = Food
+OA = Other
+UA = Unknown
+#}
+
+[#
+  ID: AllergyStatusCdTable
+#]
+Table {#
+CANCEL = 73425007
+Canceled = 73425007
+Resolved = 413322009
+RESOLVED = 413322009
+Active = 55561003
+ACTIVE = 55561003
+#}
+
+[#
+  ID: AllergyStatusTable
+#]
+Table {#
+55561003 = Active
+73425007 = Inactive
+90734009 = Chronic
+7087005 = Intermittent
+255227004 = Recurrent
+415684004 = Rule out
+410516002 = Ruled out
+413322009 = Resolved
+#}

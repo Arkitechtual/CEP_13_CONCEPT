@@ -1,0 +1,20 @@
+
+ [#
+    Always
+ #]
+ Template {#
+    <%
+        if ( input.get("PID.2/CX.1").equals("") ) {
+            data.put("patientMRN", input.get("PID.3/CX.1"));
+            data.put("patientAA", input.get("PID.3/CX.4/HD.1"));
+            data.put("source", input.get("PID.3/CX.4/HD.1"));
+        } else {
+            data.put("patientMRN", input.get("PID.2/CX.1"));
+            data.put("patientAA", input.get("PID.2/CX.4/HD.1"));
+            data.put("source", input.get("PID.2/CX.4/HD.1"));
+        }
+       
+    %>
+ #}
+
+<# MPI.rule #>

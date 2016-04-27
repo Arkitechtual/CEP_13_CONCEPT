@@ -1,0 +1,133 @@
+
+[#
+   Message: ADT
+#]
+Template {#
+<%  if((!globalinput.get("PID.18/CX.1").equals("") || !input.get("PV1.19/CX.1").equals("")) && !input.get("PV1").toString().equals("[]")) {
+
+    String sPV13 = input.get("PV1.3/PL.4/HD.1");
+    sPV13 = sPV13.replace(" ", "-");
+
+    String strPointOfCare = "";
+    String strFacility = "";
+    String strBuilding = "";
+
+    if (data.get("patientAA").equals("2.16.840.1.113883.3.627.1.1") ) { /* TCH */
+        if(input.get("PV1.3/PL.1").equals("")) {
+            strFacility = "TCHTEST";
+        } else {
+            strFacility = engine.callRule("LocationTable",data.get("encounter_group").toString() + input.get("PV1.3/PL.2").toString() + input.get("PV1.3/PL.3").toString(), data);
+        }
+    } else if (data.get("patientAA").equals("2.16.840.1.113883.3.615.0.100") ) {
+        strPointOfCare= input.get("PV1.39");
+        strFacility = engine.callRule("LocationTable",data.get("encounter_group").toString() + input.get("MSH.4/HD.1").toString(), data);
+        if(strFacility.equals("")) {
+            strFacility = engine.callRule("LocationTable", input.get("MSH.4/HD.1").toString(), data);
+        }
+        strBuilding = input.get("PV1.39/IS.7");
+    } else if (data.get("patientAA").equals("2.16.840.1.113883.3.429.1.1") ) {
+        strPointOfCare= input.get("PV1.39");
+        strFacility = engine.callRule("LocationTable",data.get("encounter_group").toString() + input.get("PV1.39").toString(), data);
+        if(strFacility.equals("")) {
+            strFacility = engine.callRule("LocationTable", input.get("PV1.39").toString(), data);
+        }
+        strBuilding = input.get("PV1.39/IS.7");
+    } else {
+        strPointOfCare= input.get("PV1.3/PL.1");
+        strFacility = engine.callRule("LocationTable",data.get("encounter_group").toString() + sPV13, data);
+        if(strFacility.equals("")) {
+    	    strFacility = engine.callRule("LocationTable",data.get("patientAA").toString() + sPV13, data);
+            if(strFacility.equals("")) {
+                strFacility = engine.callRule("LocationTable", sPV13, data);
+                if(strFacility.equals("")) {
+                    strFacility = input.get("PV1.3/PL.4/HD.1");
+                }
+            }
+        }
+        strBuilding = engine.callRule("LocationTable",data.get("encounter_group").toString() + input.get("PV1.3/PL.7").toString(), data);
+
+        if(strBuilding.equals("")) {
+        	strBuilding = input.get("PV1.3/PL.7");
+        }
+    }
+
+    String strEncounterType = engine.callRule("EncounterTypeTable",data.get("encounter_group").toString() + input.get("PV1.18").toString(), data);
+
+    if(strEncounterType.equals("")) {
+        strEncounterType = engine.callRule("EncounterTypeTable", data.get("encounter_group").toString() + input.get("PV1.2").toString(), data);
+    }
+
+    if(strEncounterType.equals("")) {
+    	strEncounterType = engine.callRule("EncounterTypeTable",data.get("patientAA").toString() + input.get("PV1.18").toString(), data);
+    }
+
+    if(strEncounterType.equals("")) {
+        strEncounterType = engine.callRule("EncounterTypeTable", data.get("patientAA").toString() + input.get("PV1.2").toString(), data);
+    }
+
+    if(strEncounterType.equals("")) {
+        strEncounterType = input.get("PV1.18");
+    }
+
+    if(strEncounterType.equals("")) {
+        strEncounterType = input.get("PV1.2");
+    }
+
+    String strSource = "";
+    if(input.get("MSH.9/MSG.2").toString().equals("A11")){
+        strSource="Cancel";
+    } else if(input.get("MSH.9/MSG.2").toString().equals("A13")){
+        strSource="Discharged";
+    } else {
+        strSource="Active";
+    }
+
+    String strDischargeDT = "";
+    if(!input.get("MSH.9/MSG.2").toString().equals("A13")){
+        strDischargeDT=input.get("PV1.45/TS.1");
+    } else {
+        strDischargeDT = "\"\"";
+    }
+%>
+    <encounter>
+
+        <SOURCE><%= data.get("source") %></SOURCE>
+
+        <DOCUMENT_DATETIME><%= globalinput.get("MSH.7/TS.1") %></DOCUMENT_DATETIME>
+
+        <POINTOFCARE><%=strPointOfCare %></POINTOFCARE>
+
+        <FACILITY><%=strFacility %></FACILITY>
+
+        <BUILDING><%=strBuilding %></BUILDING>
+
+        <ENCOUNTER_TYPE><%=strEncounterType %></ENCOUNTER_TYPE>
+
+        <% if(data.get("encounter_origin").toString().equals("original")) { %>
+            <ENCOUNTER_NUMBER><%=data.get("encounter_alias").toString() %></ENCOUNTER_NUMBER>
+        <% } else { %>
+            <ENCOUNTER_NUMBER></ENCOUNTER_NUMBER>
+        <% } %>
+        <ENCOUNTER_NUM><%=data.get("encounter_alias").toString() %></ENCOUNTER_NUM> <!-- used for resolving-->
+        <ENCOUNTER_ORIGIN><%=data.get("encounter_origin").toString() %></ENCOUNTER_ORIGIN>
+
+        <REASON><%=input.get("PV2.3/CE.2") %></REASON>
+
+        <ATTENDING_PROVIDER_ID><%= input.get("PV1.7/XCN.1") %></ATTENDING_PROVIDER_ID>
+        <ATTENDING_PROVIDER_ID_OID></ATTENDING_PROVIDER_ID_OID>
+        <ATTENDING_PROVIDER_FIRST><%= input.get("PV1.7/XCN.3") %></ATTENDING_PROVIDER_FIRST>
+        <ATTENDING_PROVIDER_MIDDLE><%= input.get("PV1.7/XCN.4") %></ATTENDING_PROVIDER_MIDDLE>
+        <ATTENDING_PROVIDER_LAST><%= input.get("PV1.7/XCN.2") %></ATTENDING_PROVIDER_LAST>
+        <ATTENDING_PROVIDER_SUFFIX><%= input.get("PV1.7/XCN.5") %></ATTENDING_PROVIDER_SUFFIX>
+
+
+        <ADMIT_DATE><%=input.get("PV1.44/TS.1") %></ADMIT_DATE>
+
+        <DISCHARGE_DATE><%=strDischargeDT %></DISCHARGE_DATE>
+
+        <STATUS><%=strSource %></STATUS>
+
+    </encounter>
+<% } %>
+#}
+

@@ -1,0 +1,300 @@
+/* Code system transformation template */
+[#
+  ID: ReportNameTable
+#]
+Table {#
+
+2820510 = Consultation Reports
+2820531 = Office/Clinic Notes
+2820532 = Office/Clinic Notes
+2820538 = Cardiology Documents
+2820539 = Cardiology Documents
+2820540 = Cardiology Documents
+2820541 = Cardiology Documents
+2820543 = GI Documents
+2820545 = Procedure Reports
+2820546 = Procedure Reports
+2820559 = Surgery Documentation
+2820560 = Surgery Documentation
+2820589 = Emergency Room Documents
+2820591 = Emergency Room Documents
+2820624 = Cardiology Documents
+2820625 = Cardiology Documents
+2820628 = Cardiology Documents
+2820631 = Cardiology Documents
+2820646 = GI Documents
+2820647 = GI Documents
+2820649 = GI Documents
+2820660 = Neurology Documents
+2820661 = Neurology Documents
+2820662 = Neurology Documents
+2820663 = Procedure Reports
+2820667 = Oncology Documentation
+3346986 = Surgery Documentation
+3658357 = Discharge Documents
+3658375 = Cardiology Documents
+8347181 = Cardiology Documents
+8347288 = Neurology Documents
+35290948 = Cardiology Documents
+Bone-Density-Report = DXA Bone Density
+2820555 = Progress Note
+EVENT_CATH = Cath Labs
+Cath-Lab-MD-Report = Cath Lab MD Report
+SURG = Surgical Pathology
+Operative-Report = Operative Report
+48-Hour-Profile = 48 Hour Profile
+Admitting-Note = Admitting Note
+Cardiac-Catheterization-Report = Cardiac Catheterization Report
+Carotid-Artery-Evaluation = Carotid Artery Evaluation
+Echocardiogram = Echocardiogram
+Stress-Test = Stress Test
+Pulmonary-Function-Test = Pulmonary Function Test
+Consultation-Report = Consultation Report
+Electroencephalogram = Electroencephalogram
+Sleep-Study = Sleep Study
+Bronchoscopy-Report = Bronchoscopy Report
+Endoscopy-Report = Endoscopy Report
+Procedure-Report = Procedure Report
+Progress-Note = Progress Note
+OT-Evaluation = OT Evaluation
+PT-Evaluation = PT Evaluation
+ST-Evaluation = ST Evaluation
+Speech-Pathology-Documentation = Speech Pathology Documentation
+Oncology-Treatment-Notes = Oncology Treatment Notes
+Vascular-Chart = Vascular Chart
+Wound-Care-Note = Wound Care Note
+Brainstem-Auditory-Evoked-Potential = Brainstem Auditory Evoked Potential
+Carotid-Ultrasound = Carotid Ultrasound
+Consultation = Consultation
+CT-Scan = CT Scan
+Death-Summary = Death Summary
+History-and-Physical = History and Physical
+Diagnostic-Imaging = Diagnostic Imaging
+Electromyogram = Electromyogram
+Emergency-Room-Note = Emergency Room Note
+Holter-Monitor = Holter Monitor
+Mammography = Mammography
+MRI = MRI
+Multidisciplinary Note = Multidisciplinary Note
+Nuclear-Medicine = Nuclear Medicine
+Peripheral-Vascular-Study = Peripheral Vascular Study
+PET-Scan = PET Scan
+Special-Procedure-Note = Special Procedure Note
+T-Wave-Alternans = T-Wave Alternans
+Transesophageal-Echocardiogram = Transesophageal Echocardiogram
+Ultrasound = Ultrasound
+Visual-Evoked-Response = Visual Evoked Response
+STANISLAUSCS = Clinical Summary
+STANISLAUSOV = Office Visit
+STANISLAUSRX = Medication Report
+#}
+
+[#
+  ID: ReportTypeTable
+#]
+Table {#
+
+AHSMCMB = microbiology
+AHSMicro = microbiology
+AHSCOPATH = anatomic-pathology
+AHSAnatomic-Pathology = anatomic-pathology
+AHS14 = discharge-summary
+AHSDischarge-Note = discharge-summary
+AHSDischarge-Summary = discharge-summary
+AHSRehabilitation-Discharge-Summary = discharge-summary
+AHSDischarge-Summary = discharge-summary
+AHS11 = history-physical
+AHSHistory-and-Physical = history-physical
+AHSHistory-&-Physical = history-physical
+AHSHistory-and-Physical = history-physical
+AHSRadiation-Oncology-Assessment = radiology
+AHSRadiology-Report = radiology
+AHSRadiology = radiology
+AHSFine-Needle-Aspiration/FNA  = anatomic-pathology
+AHSSurgical-Pathology-Final-Report  = anatomic-pathology
+
+EMORY20001 = history-physical
+EMORY20001 = history-physical
+EMORY20003 = discharge-summary
+EMORY1296 = radiology
+EMORY1326 = radiology
+EMORY1340 = radiology
+LACIELAB-MIC = microbiology
+LACIEMCMB = microbiology
+LACIEMicro = microbiology
+
+/* smrtnet */=
+2.16.840.1.113883.3.593.1.1MB = microbiology
+
+STANISLAUSCS = discharge-summary
+STANISLAUSOV = other-reports
+STANISLAUSStanislaus_Diagnostic_Results = lab-result
+STANISLAUSRX = other-reports
+#}
+
+[#
+  ID: StatusCodeTable
+#]
+Table {#
+
+F = completed
+C = completed
+A = completed
+AP = completed
+IN ERROR = IN ERROR
+INERROR = IN ERROR
+Auth (Verified) = completed
+Unauth = completed
+P = Preliminary
+
+#}
+
+
+[#
+  ID: ResultValueDataType
+#]
+Table {#
+
+/* AHS */=
+2.16.840.1.113883.3.428.1.1Micro = discrete
+2.16.840.1.113883.3.787.0.0Micro = discrete
+2.16.840.1.113883.3.787.0.1Micro = discrete
+2.16.840.1.113883.3.787.0.2Micro = discrete
+2.16.840.1.113883.3.787.0.3Micro = discrete
+2.16.840.1.113883.3.787.0.0MCMB = discrete
+2.16.840.1.113883.3.787.0.1MCMB = discrete
+2.16.840.1.113883.3.787.0.2MCMB = discrete
+2.16.840.1.113883.3.787.0.3MCMB = discrete
+STANISLAUSStanislaus_Transcription = rtf
+#}
+
+[#
+  ID: MapFirstResultToReport
+#]
+Table {#
+
+/* AHS */=
+AHSanatomic-pathology = 1
+
+#}
+
+[#
+  ID: MicroSusceptTestHeader
+#]
+Table {#
+
+/* AHS */=
+AHSMDIL = MDIL
+AHSMINT = MIC Interp
+AHSKINT = KB Interp
+AHSETESTDIL= ETEST
+AHSMICDIL= MIC Dil
+AHSMICINT= MIC Interp
+#}
+
+[#
+  ID: VerifyDateLocation
+#]
+Table {#
+
+/* AHS */=
+AHSMicro = OBX14
+#}
+
+[#
+  ID: PerformDateLocation
+#]
+Table {#
+
+/* AHS */=
+AHSRadiology = OBR7
+#}
+
+[#
+  ID: MicroSingleOBR
+#]
+Table {#
+
+/* AHS */=
+AHSMCMB = 1
+#}
+
+[#
+  ID: PerformLocation
+#]
+Table {#
+
+/* AHS */=
+AHSMCMB = OBX16
+#}
+
+[#
+  ID: ORULocationTable
+#]
+Table {#
+AHS052 = HMMC
+AHS051 = CTMC
+AHS006 = SMMC
+AHS057 = MET
+AHS058 = RBCH
+AHS038 = FHZ
+AHS023 = FHHD
+AHS023L = FHLP
+AHS023W = FHWAU
+AHS017 = FHW
+AHS035 = FIS
+AHS096 = DEL
+AHS093 = ORM
+AHS093O = OCN
+AHS095 = FLG
+AHS039 = PRK
+AHS024 = EAH
+AHS037 = GOR
+AHS030 = MAN
+AHS026 = JEL
+AHS028 = TAK
+AHS002 = HIN
+AHS003 = GLE
+AHS014 = BOL
+AHS018 = LAG
+AHS004 = CVH
+
+= Not Sent
+#}
+
+
+[#
+  ID: ORUEncounterTypeTable
+#]
+
+Table {#
+
+I = Inpatient
+IP = Inpatient
+O = Outpatient
+OP = Outpatient
+E = Emergency
+ER = Emergency
+B = Observation
+P = Preadmit
+R = Recurring
+N = Skilled Nursing
+
+#}
+
+[#
+  ID: ResultTypeComment
+#]
+
+Table {#
+//a 1 means its a comment only to other results. 2 means its a comment and first obx of comment is the result value=
+AHSTXHIV-QUANTITATION = 1
+AHSCECHD-RISK-ASSESSMENT = 2
+AHSCECREATININE = 1
+AHSCEPOTASSIUM = 1
+AHSFTPOTASSIUM = 1
+AHSCEGFR-AFRICAN-AMERICAN = 1
+AHSCEGFR-AFRICAN-AMERICAN = 1
+AHSFTBUN = 1
+
+#}

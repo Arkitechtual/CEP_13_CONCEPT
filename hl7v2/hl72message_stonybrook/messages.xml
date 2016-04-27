@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<messages>
+    <message id="ADT">
+        <description>
+            ADT
+        </description>
+        <group>
+            <segment id="MSH"/>
+            <segment id="EVN" required="N"/>
+            <segment id="PID"/>
+            <segment id="NTE" required="N"/>
+            <segment id="PD1" required="N"/>
+            <segment id="MRG" required="N"/>
+            <segment id="NK1" repeatable="Y" required="N"/>
+            <segment id="PV1" required="N"/>
+            <segment id="PV2" required="N"/>
+            <segment id="IAM" required="N"/>
+            <segment id="ZVI" required="N"/>
+            <segment id="ROL" repeatable="Y" required="N"/>
+            <segment id="GOL" required="N"/>
+            <segment id="RXE" repeatable="Y" required="N"/>
+            <segment id="OBX" repeatable="Y" required="N"/>
+            <group repeatable="Y" required="N" package="Allergy">
+                <segment id="AL1"/>
+                <segment id="ZAL" required="N"/>
+                <segment id="NTE" required="N" repeatable="Y"/>
+            </group>
+            <group repeatable="Y" required="N" package="Problem">
+                <segment id="PRB"/>
+                <segment id="ZPB" required="N"/>
+                <segment id="NTE" required="N"/>
+                <segment id="VAR" required="N"/>
+            </group>
+            <group repeatable="Y" required="N" package="Diagnosis">
+                <segment id="DG1"/>
+                <segment id="NTE" required="N"/>
+            </group>
+            <group repeatable="Y" required="N" package="Procedure">
+		        <segment id="PR1"/>
+                <segment id="NTE" required="N"/>
+            </group>
+            <segment id="GT1" repeatable="Y" required="N"/>
+            <group repeatable="Y">
+                <segment id="IN1" required="N"/>
+                <segment id="IN2" required="N"/>
+                <segment id="IN3" required="N"/>
+            </group>
+            <segment id="ACC" required="N"/>
+            <segment id="ZAC" required="N"/>
+            <segment id="UB2" required="N"/>
+            <segment id="PDA" required="N"/>
+            <segment id="ZCN" required="N"/>
+            <segment id="ZU1" required="N"/>
+            <segment id="ZU3" required="N"/>
+            <segment id="ZU4" required="N"/>
+            <segment id="ZU5" required="N"/>
+            <segment id="ZU6" required="N"/>
+            <segment id="ZU7" required="N"/>
+            <segment id="ZU8" required="N"/>
+        </group>
+    </message>
+    <message id="SIU">
+        <description>
+            SIU
+        </description>
+        <group>
+            <segment id="MSH"/>
+            <segment id="SCH" required="Y"/>
+            <segment id="NTE" repeatable="Y" required="N"/>
+            <segment id="PID"/>
+            <segment id="PD1" repeatable="Y" required="N"/>
+            <segment id="PV1" required="N"/>
+            <segment id="PV2" required="N"/>
+            <segment id="OBX" repeatable="Y" required="N"/>
+            <segment id="DG1" repeatable="Y" required="N"/>
+            <group repeatable="Y" required="N">
+                <segment id="RGS" required="Y"/>
+                <group repeatable="Y" required="N">
+                    <segment id="AIS"/>
+                    <segment id="NTE" required="N"/>
+                </group>
+                <group repeatable="Y" required="N" package="CONSULTANT">
+                    <segment id="AIG"/>
+                    <segment id="NTE" required="N"/>
+                </group>
+                <group repeatable="Y" required="N" package="DEPARTMENT">
+                    <segment id="AIL"/>
+                    <segment id="NTE" required="N"/>
+                </group>
+                <group repeatable="Y" required="N" package="CONSULTANT">
+                    <segment id="AIP"/>
+                    <segment id="NTE" required="N"/>
+                </group>
+            </group>
+            <segment id="ZBX" required="N" repeatable="Y"/>
+        </group>
+    </message>
+    <message id="ORM">
+        <description>
+            Order Message
+        </description>
+        <group>
+            <segment id="MSH"/>
+            <segment id="EVN" required="N"/>
+            <segment id="PID"/>
+            <segment id="NTE" repeatable="Y" required="N"/>
+            <segment id="PV1" required="N"/>
+            <group repeatable="Y" package="Order">
+                <segment id="ORC" required="N"/>
+                <segment id="RXO" required="N"/>
+                <segment id="RXR" required="N"/>
+                <segment id="OBR" required="N"/>
+                <segment id="NTE" repeatable="Y" required="N"/>
+                <group repeatable="Y" required="N">
+                    <segment id="OBX"/>
+                    <segment id="NTE" repeatable="Y" required="N"/>
+                </group>
+            </group>
+        </group>
+    </message>
+    <message id="ORU">
+        <description>
+            Unsolicited Observation Message
+        </description>
+        <group>
+            <segment id="MSH"/>
+            <segment id="EVN" required="N"/>
+            <segment id="PID"/>
+            <segment id="PD1" required="N"/>
+            <segment id="NK1" repeatable="Y" required="N"/>
+            <segment id="PV1" required="N"/>
+            <segment id="PV2" required="N"/>
+            <group repeatable="Y" package="Order">
+                <segment id="ORC" required="N"/>
+                <segment id="OBR"/>
+                <segment id="ZDS" repeatable="Y" required="N"/>
+                <segment id="NTE" repeatable="Y" required="N"/>
+                <group repeatable="Y" required="N" package="RESULT">
+                    <segment id="OBX"/>
+                    <segment id="NTE" repeatable="Y" required="N"/>
+                </group>
+            </group>
+        </group>
+    </message>
+    <message id="ZB1">
+        <description>
+            Blood Bank Discrete Result - ZB1
+        </description>
+        <group>
+            <segment id="MSH"/>
+            <segment id="PID"/>
+            <segment id="PV1" required="N"/>
+            <group repeatable="Y">
+                <segment id="ORC"/>
+                <segment id="OBR"/>
+                <segment id="NTE" repeatable="Y" required="N"/>
+                <group repeatable="Y" required="N">
+                    <segment id="OBX"/>
+                    <segment id="NTE" repeatable="Y" required="N"/>
+                </group>
+                <group repeatable="Y" required="N">
+                    <segment id="ZBP"/>
+                    <segment id="OBX"/>
+                    <segment id="NTE" repeatable="Y" required="N"/>
+                </group>
+            </group>
+        </group>
+    </message>
+    <message id="ZB2">
+        <description>
+            Blood Bank Discrete Result - ZB2
+        </description>
+        <group>
+            <segment id="MSH"/>
+            <segment id="PID"/>
+            <segment id="PV1" required="N"/>
+            <group repeatable="Y">
+                <segment id="ORC"/>
+                <segment id="OBR"/>
+                <segment id="NTE" repeatable="Y" required="N"/>
+                <segment id="ZBP"/>
+            </group>
+        </group>
+    </message>
+    <message id="CHR">
+        <description>
+            Charted Result
+        </description>
+        <group>
+            <segment id="MSH"/>
+            <segment id="PID"/>
+            <segment id="PV1" required="N"/>
+            <segment id="ORC" required="N"/>
+            <segment id="OBR"/>
+            <segment id="OBX" repeatable="Y" required="N"/>
+        </group>
+    </message>
+    <message id="LCR">
+        <description>
+            Linked or Composite Results
+        </description>
+        <group>
+            <segment id="MSH"/>
+            <segment id="PID"/>
+            <segment id="PV1" required="N"/>
+            <group repeatable="Y">
+                <segment id="ORC"/>
+                <segment id="OBR"/>
+            </group>
+            <segment id="OBX" repeatable="Y" required="N"/>
+        </group>
+    </message>
+    <message id="MTC">
+        <description>
+            Medical Transcription Management and Clinical Notes
+        </description>
+        <group>
+            <segment id="MSH"/>
+            <segment id="PID"/>
+            <segment id="NTE" repeatable="Y" required="N"/>
+            <segment id="PV1" required="N"/>
+            <group repeatable="Y">
+                <segment id="ORC" required="N"/>
+                <segment id="OBR"/>
+                <segment id="ZDS" repeatable="Y" required="N"/>
+                <segment id="NTE" repeatable="Y" required="N"/>
+                <group repeatable="Y" required="N">
+                    <segment id="OBX"/>
+                    <segment id="ZDS" repeatable="Y" required="N"/>
+                    <segment id="NTE" repeatable="Y" required="N"/>
+                </group>
+            </group>
+        </group>
+    </message>
+    <message id="VXU">
+        <description>
+            Definition for Immunizations Outbound
+        </description>
+        <group>
+            <segment id="MSH"/>
+            <segment id="EVN" required="N"/>
+            <segment id="PID"/>
+            <segment id="PD1" required="N"/>
+			<segment id="NK1" repeatable="Y" required="N"/>
+            <segment id="PV1"/>
+            <segment id="PV2" required="N"/>
+			<group required="N" repeatable="Y">
+				<segment id="IN1"/>
+				<segment id="IN2" required="N"/>
+				<segment id="IN3" required="N"/>
+			</group>
+            <group required="N" repeatable="Y" package="ORDER">
+				<segment id="ORC" required="N"/>
+				<segment id="RXA"/>
+				<segment id="RXR" required="N"/>
+				<group required="N" repeatable="Y">
+					<segment id="OBX"/>
+					<segment id="NTE" repeatable="Y" required="N"/>
+				</group>
+                <segment id="ZVX" required="N"/>
+                <segment id="ZNT" required="N" repeatable="Y"/>
+			</group>
+        </group>
+    </message>
+    <message id="MDM">
+        <description>
+            Medical Document Management Message
+        </description>
+        <group>
+            <segment id="MSH"/>
+            <segment id="EVN" required="N"/>
+            <segment id="PID"/>
+            <segment id="NTE" repeatable="Y" required="N"/>
+            <segment id="PV1" required="N"/>
+            <group repeatable="Y" required="N" package="Order">
+                <segment id="ORC" required="N"/>
+                <segment id="OBR"/>
+                <segment id="NTE" repeatable="Y" required="N"/>
+            </group>
+            <segment id="TXA" required="Y"/>
+            <group repeatable="Y" required="N" package="RESULT">
+                <segment id="OBX"/>
+                <segment id="NTE" required="N" repeatable="Y"/>
+            </group>
+        </group>
+    </message>
+    <message id="QBP">
+        <description>
+            PIX/PDQ query
+        </description>
+        <group>
+            <segment id="MSH"/>
+            <segment id="QPD"/>
+            <segment id="RCP" required="N"/>
+            <segment id="DSC" required="N"/>
+        </group>
+    </message>
+    <message id="QCN">
+        <description>
+            PIX/PDQ query cancel
+        </description>
+        <group>
+            <segment id="MSH"/>
+            <segment id="QID"/>
+        </group>
+    </message>
+    <message id="RSP">
+        <description>
+            PIX/PDQ query response
+        </description>
+        <group>
+            <segment id="MSH"/>
+            <segment id="MSA"/>
+            <segment id="ERR" repeatable="Y" required="N"/>
+            <segment id="QAK"/>
+            <segment id="QPD"/>
+            <segment id="PID" repeatable="Y" required="N"/>
+            <segment id="QRI" required="N"/>
+            <segment id="DSC" required="N"/>
+        </group>
+    </message>
+    <message id="PPR">
+        <description>
+            PPR
+        </description>
+        <group>
+            <segment id="MSH"/>
+            <segment id="EVN" required="N"/>
+            <segment id="PID"/>
+            <segment id="NTE" required="N"/>
+            <segment id="PD1" required="N"/>
+            <segment id="MRG" required="N"/>
+            <segment id="NK1" repeatable="Y" required="N"/>
+            <segment id="PV1" required="N"/>
+            <segment id="PV2" required="N"/>
+            <group repeatable="Y" required="N" package="Problem">
+                <segment id="PRB"/>
+                <segment id="ZPB" required="N"/>
+                <segment id="NTE" required="N"/>
+                <segment id="VAR" required="N"/>
+            </group>
+            <group repeatable="Y" required="N" package="Recommendation">
+                <segment id="ROL" required="Y"/>
+                <segment id="GOL" required="N"/>
+            </group>
+            <group repeatable="Y" required="N" package="Order">
+                <segment id="ORC" required="N"/>
+                <segment id="OBR"/>
+                <segment id="ZDS" repeatable="Y" required="N"/>
+                <segment id="NTE" repeatable="Y" required="N"/>
+                <group repeatable="Y" required="N" package="RESULT">
+                    <segment id="OBX"/>
+                    <segment id="NTE" required="N"/>
+                </group>
+            </group>
+        </group>
+    </message>
+    <message id="OMN">
+        <description>
+            Non-stock requisition order message
+        </description>
+        <group>
+            <segment id="MSH"/>
+            <segment id="EVN" required="N"/>
+            <segment id="PID"/>
+            <segment id="PV1" required="N"/>
+            <segment id="ORC" required="Y"/>
+            <segment id="RQD" required="Y"/>
+        </group>
+    </message>
+    <message id="DFT">
+        <description>
+            Detailed Financial Transaction message
+        </description>
+        <group>
+            <segment id="MSH"/>
+            <segment id="EVN" required="N"/>
+            <segment id="PID"/>
+            <segment id="PV1" required="N"/>
+            <segment id="FT1" repeatable="Y" required="Y"/>
+        </group>
+    </message>
+    <message id="ACK">
+        <description>
+            ACK from foreign system
+        </description>
+        <group>
+            <segment id="MSH"/>
+            <segment id="MSA"/>
+            <segment id="ERR" required="N"/>
+        </group>
+    </message>
+    <message id="OMP">
+        <description>
+            Pharmacy/Treatment Order Message
+        </description>
+        <group>
+            <segment id="MSH"/>
+            <segment id="EVN" required="N"/>
+            <segment id="PID"/>
+            <segment id="NTE" repeatable="Y" required="N"/>
+            <segment id="PV1" required="N"/>
+            <segment id="AL1" repeatable="Y" required="N"/>
+            <group repeatable="Y" package="Order">
+                <segment id="ORC" required="N"/>
+                <segment id="RXO" required="N"/>
+                <segment id="RXR" required="N"/>
+                <segment id="RXC" repeatable="Y" required="N"/>
+                <segment id="OBR" required="N"/>
+                <segment id="NTE" repeatable="Y" required="N"/>
+                <group repeatable="Y" required="N">
+                    <segment id="OBX"/>
+                    <segment id="NTE" repeatable="Y" required="N"/>
+                </group>
+            </group>
+        </group>
+    </message>
+
+</messages>

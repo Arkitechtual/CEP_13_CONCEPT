@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurations>
+    <engine id="Template" class="com.browsersoft.jengines.engine.groovy.GroovyTemplateRulesEngine" />
+    <engine id="Table" class="com.browsersoft.jengines.engine.table.TableRulesEngine"/>
+    <condition id="Always" class="com.browsersoft.jengines.condition.AlwaysRuleCondition"/>
+    <condition id="Message" class="com.browsersoft.adapterkit.transformation.engines.MessageCondition"/>
+    <target id="Output" class="com.browsersoft.jengines.target.StringBufferTarget" default="yes"/>
+</configurations>

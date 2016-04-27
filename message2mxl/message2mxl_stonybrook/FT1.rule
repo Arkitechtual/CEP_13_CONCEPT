@@ -1,0 +1,42 @@
+
+
+[#
+   Message: DFT
+#]
+Template {#
+	<% 	engine.callRule("FT1Processing", input.get("FT1"), data); %>
+#}
+
+[#
+   ID: FT1Processing
+#]
+Template {#
+<% if(!input.get("FT1.7").equals("") || !input.get("FT1.8").equals("")) {
+    String strTransIdentifier = "";
+    String strCode = "";
+    String strCodeDisplay = "";
+    String strCodeSystem = "";
+    String strCodeSystemName = "";
+    String strEffectiveTime = input.get("FT1.4/TS.1");
+    strTransIdentifier = input.get("FT1.7").toString() + input.get("FT1.4/TS.1").toString() + data.get("patientAA").toString();
+    strCode = input.get("FT1.7");
+    strCodeSystem = engine.callRule("CodeSystemId", input.get("FT1.7"), data);
+    strCodeSystemName = engine.callRule("CodeSystemName", "FT1"+data.get("patientAA").toString(), data);
+    strCodeDisplay = input.get("FT1.8");
+
+%>
+    <procedure>
+        <SOURCE><%= data.get("source") %></SOURCE>
+        <PROCEDURE_DATETIME><%= strEffectiveTime %></PROCEDURE_DATETIME>
+        <PROCEDURE><%= strCodeDisplay %></PROCEDURE>
+        <PROCEDURE_CODE><%= strCode %></PROCEDURE_CODE>
+        <PROCEDURE_CODE_SOURCE><%= strCodeSystem %></PROCEDURE_CODE_SOURCE>
+        <PROCEDURE_CODE_SOURCE_NAME><%= strCodeSystemName %></PROCEDURE_CODE_SOURCE_NAME>
+        <SURGEON></SURGEON>
+        <COMMENTS></COMMENTS>
+        <ENCOUNTER_NUM><%=data.get("encounter_alias").toString() %></ENCOUNTER_NUM>
+        <ENCOUNTER_ORIGIN><%=data.get("encounter_origin").toString() %></ENCOUNTER_ORIGIN>
+    </procedure>
+<% } %>
+#}
+

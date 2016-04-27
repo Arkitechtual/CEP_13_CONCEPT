@@ -1,0 +1,52 @@
+
+[#
+   Message: VXU
+#]
+Template {#
+<%
+engine.callRule("ImmunizationProcessing", input.get("ORDER"), data);
+ %>
+#}
+
+[#
+   Id: ImmunizationProcessing
+#]
+Template {#
+<%
+String sStatus = engine.callRule("StatusCodeTable", input.get("RXA.20"), data);
+
+String strComment=input.get("NTE.3");
+String strRouteCd=input.get("RXR.1/CE.1");
+String strRoute=input.get("RXR.1/CE.2");
+if(strRoute.equals("")) {
+    strRoute=strRouteCd;
+}
+
+%>
+<immunization>
+    <SOURCE><%= data.get("source") %></SOURCE>
+    <DOCUMENT_DATETIME><%= globalinput.get("MSH.7/TS.1") %></DOCUMENT_DATETIME>
+    <IMMUNIZATION><%= input.get("RXA.5/CE.2") %></IMMUNIZATION>
+    <IMMUNIZATION_CODE><%= input.get("RXA.5/CE.1") %></IMMUNIZATION_CODE>
+    <IMMUNIZATION_CODE_SOURCE>2.16.840.1.113883.6.59</IMMUNIZATION_CODE_SOURCE>
+    <DATE_GIVEN><%= input.get("RXA.3/TS.1") %></DATE_GIVEN>
+    <ROUTE><%= strRoute  %></ROUTE>
+    <ROUTE_CODE><%= strRoute  %></ROUTE_CODE>
+    <SITE><%= input.get("RXR.2/CE.1") %></SITE>
+    <MANUFACTURER><%= input.get("RXA.17/CE.1") %></MANUFACTURER>
+    <LOT><%= input.get("RXA.15") %></LOT>
+    <DOSE_QTY><%= input.get("RXA.6") %></DOSE_QTY>
+    <DOSE_QTY_UNIT><%= input.get("RXA.7/CE.1") %></DOSE_QTY_UNIT>
+    <NOTE><%= strComment.replaceAll("\n", "&lt;br/&gt;") %></NOTE>
+    <STATUS><%= sStatus %></STATUS>
+    <LAST_UPDATED_BY_ID><%= input.get("RXA.10/XCN.1") %></LAST_UPDATED_BY_ID>
+    <LAST_UPDATED_BY_ID_OID></LAST_UPDATED_BY_ID_OID>
+    <LAST_UPDATED_BY_FIRST><%= input.get("RXA.10/XCN.3") %></LAST_UPDATED_BY_FIRST>
+    <LAST_UPDATED_BY_MIDDLE><%= input.get("RXA.10/XCN.4") %></LAST_UPDATED_BY_MIDDLE>
+    <LAST_UPDATED_BY_LAST><%= input.get("RXA.10/XCN.2") %></LAST_UPDATED_BY_LAST>
+    <LAST_UPDATED_BY_SUFFIX><%= input.get("RXA.10/XCN.5") %></LAST_UPDATED_BY_SUFFIX>
+    <ENCOUNTER_NUM><%=data.get("encounter_alias").toString() %></ENCOUNTER_NUM>
+    <ENCOUNTER_ORIGIN><%=data.get("encounter_origin").toString() %></ENCOUNTER_ORIGIN>
+</immunization>
+   
+#}

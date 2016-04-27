@@ -1,0 +1,79 @@
+
+
+[#
+   Message: ADT
+#]
+Template {#
+	<% 	engine.callRule("PR1Processing", input.get("Procedure"), data); %>
+#}
+
+[#
+   ID: PR1Processing
+#]
+Template {#
+<% if(!input.get("PR1.3/CE.1").equals("") || !input.get("PR1.3/CE.2").equals("")) {
+    String strTransIdentifier = "";
+    String strCode = "";
+    String strCodeDisplay = "";
+    String strCodeSystem = "";
+    String strCodeSystemName = "";
+    String strEffectiveTime = input.get("PR1.5/TS.1");
+    if(input.get("PR1.2").equals("")) {
+        strTransIdentifier = input.get("PR1.3/CE.2").toString() + input.get("PR1.5/TS.1").toString() + data.get("patientAA").toString();
+        strCode = input.get("PR1.3/CE.1");
+        strCodeSystem = engine.callRule("CodeSystemId", input.get("PR1.3/CE.3"), data);
+        strCodeSystemName = input.get("PR1.3/CE.3");
+        strCodeDisplay = input.get("PR1.3/CE.2");
+    } else {
+        strTransIdentifier = input.get("PR1.3/CE.2").toString() + input.get("PR1.5/TS.1").toString() + data.get("patientAA").toString();
+        strCode = input.get("PR1.3/CE.1");
+        strCodeSystem = engine.callRule("CodeSystemId", input.get("PR1.2"), data);
+        strCodeSystemName = input.get("PR1.2");
+        strCodeDisplay = input.get("PR1.4");
+        if(strCodeDisplay.equals("")){
+            strCodeDisplay = input.get("PR1.3/CE.2");
+        }
+    }
+
+    String strSurgeonId = "";
+    String strSurgeonLast = "";
+    String strSurgeonFirst = "";
+    String strSurgeonMiddle = "";
+    String strSurgeonSuffix = "";
+    if (!input.get("PR1.11/XCN.2").equals("") ) {
+        strSurgeonId = input.get("PR1.11/XCN.1").toString();
+        strSurgeonLast = input.get("PR1.11/XCN.2").toString();
+        strSurgeonFirst = input.get("PR1.11/XCN.3").toString();
+        strSurgeonMiddle = input.get("PR1.11/XCN.4").toString();
+        strSurgeonSuffix = input.get("PR1.11/XCN.5").toString();
+
+    } else if (!input.get("PR1.12/XCN.2").equals("") ) {
+        strSurgeonId = input.get("PR1.12/XCN.1").toString();
+        strSurgeonLast = input.get("PR1.12/XCN.2").toString();
+        strSurgeonFirst = input.get("PR1.12/XCN.3").toString();
+        strSurgeonMiddle = input.get("PR1.12/XCN.4").toString();
+        strSurgeonSuffix = input.get("PR1.12/XCN.5").toString();
+    }
+
+    String strComment=input.get("NTE.3");
+%>
+    <procedure>
+        <SOURCE><%= data.get("source") %></SOURCE>
+        <PROCEDURE_DATETIME><%= strEffectiveTime %></PROCEDURE_DATETIME>
+        <PROCEDURE><%= strCodeDisplay %></PROCEDURE>
+        <PROCEDURE_CODE><%= strCode %></PROCEDURE_CODE>
+        <PROCEDURE_CODE_SOURCE><%= strCodeSystem %></PROCEDURE_CODE_SOURCE>
+        <PROCEDURE_CODE_SOURCE_NAME><%= strCodeSystemName %></PROCEDURE_CODE_SOURCE_NAME>
+        <SURGEON_ID><%= strSurgeonId %></SURGEON_ID>
+        <SURGEON_ID_OID></SURGEON_ID_OID>
+        <SURGEON_FIRST><%= strSurgeonFirst %></SURGEON_FIRST>
+        <SURGEON_MIDDLE><%= strSurgeonMiddle %></SURGEON_MIDDLE>
+        <SURGEON_LAST><%= strSurgeonLast %></SURGEON_LAST>
+        <SURGEON_SUFFIX><%= strSurgeonSuffix %></SURGEON_SUFFIX>
+        <COMMENTS><%= strComment.replaceAll("\n", "&lt;br/&gt;") %></COMMENTS>
+        <ENCOUNTER_NUM><%=data.get("encounter_alias").toString() %></ENCOUNTER_NUM>
+        <ENCOUNTER_ORIGIN><%=data.get("encounter_origin").toString() %></ENCOUNTER_ORIGIN>
+    </procedure>
+<% } %>
+#}
+

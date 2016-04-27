@@ -1,0 +1,162 @@
+
+[#
+   Message: ADT
+#]
+Template {#
+	<% engine.callRule("PRBProcessing", input.get("Problem"), data);
+           engine.callRule("PRBProcessing", input.get("Diagnosis"), data);  %>
+#}
+
+[#
+   Message: PPR
+#]
+Template {#
+	<% engine.callRule("PRBProcessing", input.get("Problem"), data);
+           engine.callRule("PRBProcessing", input.get("Diagnosis"), data);  %>
+#}
+
+
+[#
+   ID: PRBProcessing
+#]
+Template {#
+
+<%
+
+Integer iTypeFlag = 0;
+String strMXLType = "";
+String strTransIdentifier = "";
+String strCode = "";
+String strCodeDisplay = "";
+String strEffectiveTime = "";
+String strProblemCode = "";
+String strProblemCodeDisplay = "";
+String strProblemCodeSystem = "";
+String strProblemCodeSystemName = "";
+String strStatusCode = "";
+String strStatusCodeDisplay = "";
+String strClassificationCode = "";
+String strClassificationDisplay = "";
+String strProblemActionDate = "";
+String strDiagnosisType = "";
+String strDiagnosisPriority = "";
+
+if(!input.get("PRB.3/CE.1").equals("") || !input.get("PRB.3/CE.2").equals("")) {
+    iTypeFlag = 1; // Problem
+    strTransIdentifier = input.get("PRB.3/CE.2").toString() + data.get("patientAA").toString();
+    strCode = "55607006";
+    strCodeDisplay = "Problem";
+    strMXLType = "Condition";
+    strEffectiveTime = input.get("PRB.16/TS.1");
+    strProblemCode = input.get("PRB.3/CE.1");
+    strProblemCodeDisplay = input.get("PRB.3/CE.2");
+    strProblemCodeSystem = engine.callRule("CodeSystemId", input.get("PRB.3/CE.3"), data);
+    strProblemCodeSystemName = input.get("PRB.3/CE.3");
+
+/*Clinical Status Values
+Code	Description
+55561003	Active
+73425007	Inactive
+413322009	Resolved
+ST		Canceled
+*/
+    if (input.get("PRB.14/CE.1").equals("Active")) {
+        strStatusCode="55561003";
+        strStatusCodeDisplay ="Active";
+    } else if (input.get("PRB.14/CE.1").equals("Resolved") ) {
+        strStatusCode="413322009";
+        strStatusCodeDisplay ="Resolved";
+    } else if (input.get("PRB.14/CE.1").equals("Inactive") ) {
+        strStatusCode="73425007";
+        strStatusCodeDisplay ="Inactive";
+    } else {
+        strStatusCode=input.get("PRB.14/CE.1");
+        strStatusCodeDisplay = engine.callRule("ProblemStatusTable", strStatusCode, data);
+        if(strStatusCodeDisplay.toString().equals("")) {
+            strStatusCodeDisplay =strStatusCode;
+        }
+        if(strStatusCode.equals("")) {
+            strStatusCode="55561003";
+            strStatusCodeDisplay ="Active";
+        }
+    }
+
+    strClassificationCode = input.get("PRB.10/CE.1");
+    strClassificationDisplay = engine.callRule("ClassificationTable", strClassificationCode, data);
+
+    if (input.get("PRB.10/CE.1").equals("Med") ) {
+        strClassificationDisplay="Medical";
+    } else if (input.get("PRB.10/CE.1").equals("Diet - medical") ) {
+        strClassificationDisplay="Dietary";
+    } else if (input.get("PRB.10/CE.1").equals("Nursing aid") ) {
+        strClassificationDisplay="Nursing";
+    } else if (strClassificationDisplay.equals("") ){
+        strClassificationDisplay=strClassificationCode;
+    }
+
+    if (!input.get("PV1.45/TS.1").equals ("")) {
+        strProblemActionDate = input.get("PV1.45/TS.1");
+    } else {
+        strProblemActionDate = input.get("PRB.2/TS.1");
+    }
+
+} else if(!input.get("DG1.3/CE.1").equals("") || !input.get("DG1.3/CE.2").equals("")) {
+    if(!input.get("DG1.3/CE.2").equals("")) {
+        strTransIdentifier = input.get("DG1.3/CE.2").toString() + data.get("patientAA").toString();
+    } else {
+        strTransIdentifier = input.get("DG1.3/CE.1").toString() + input.get("DG1.4").toString() + data.get("patientAA").toString();
+    }
+    strCode = "282291009";
+    strCodeDisplay = "Diagnosis";
+    strEffectiveTime = input.get("DG1.5/TS.1");
+    strDiagnosisType = input.get("DG1.6").toString();
+    strDiagnosisPriority = input.get("DG1.15").toString();
+
+    strProblemCode = input.get("DG1.3/CE.1");
+    if(input.get("DG1.2").equals("")) {
+        strProblemCodeSystem = engine.callRule("CodeSystemId", input.get("DG1.3/CE.3"), data);
+        strProblemCodeSystemName = input.get("DG1.3/CE.3");
+        strProblemCodeDisplay = input.get("DG1.3/CE.2");
+    } else {
+        strProblemCodeSystem = engine.callRule("CodeSystemId", input.get("DG1.2"), data);
+        strProblemCodeSystemName = input.get("DG1.2");
+        strProblemCodeDisplay = input.get("DG1.4");
+    }
+
+    strStatusCode="55561003";
+    strStatusCodeDisplay ="Active";
+
+    iTypeFlag = 2; // Diagnosis
+    strProblemActionDate = input.get("PV1.45/TS.1");
+    strMXLType = "Diagnosis";
+}
+
+String strComment=input.get("NTE.3");
+
+if(iTypeFlag >0) {  %>
+
+    <problem>
+        <SUB_TYPE><%= strMXLType %></SUB_TYPE>
+        <SOURCE><%= data.get("source") %></SOURCE>
+        <DOCUMENT_DATETIME><%= globalinput.get("MSH.7/TS.1") %></DOCUMENT_DATETIME>
+        <PROBLEM><%= strProblemCodeDisplay %></PROBLEM>
+        <PROBLEM_SOURCE><%= strProblemCode %></PROBLEM_SOURCE>
+        <PROBLEM_CODE_SYSTEM><%= strProblemCodeSystem %></PROBLEM_CODE_SYSTEM>
+        <PROBLEM_CODE_NAME><%= strProblemCodeSystemName %></PROBLEM_CODE_NAME>
+        <PROBLEM_TYPE_CODE><%= strCode %></PROBLEM_TYPE_CODE>
+        <PROBLEM_TYPE_CODE_DISP><%= strCodeDisplay %></PROBLEM_TYPE_CODE_DISP>
+		<DIAGNOSIS_TYPE><%= strDiagnosisType %></DIAGNOSIS_TYPE>
+		<DIAGNOSIS_PRIORITY><%= strDiagnosisPriority %></DIAGNOSIS_PRIORITY>
+        <STATUS><%= strStatusCodeDisplay %></STATUS>
+        <STATUS_CODE><%= strStatusCode %></STATUS_CODE>
+        <ONSET_DATE><%= strEffectiveTime %></ONSET_DATE>
+        <ACTION_DATE><%= strProblemActionDate %></ACTION_DATE>
+        <CLASSIFICATION><%= strClassificationDisplay %></CLASSIFICATION>
+        <CLASSIFICATION_CODE><%= strClassificationCode %></CLASSIFICATION_CODE>
+        <COMMENTS><%= strComment.replaceAll("\n", "&lt;br/&gt;") %></COMMENTS>
+        <ENCOUNTER_NUM><%=data.get("encounter_alias").toString() %></ENCOUNTER_NUM>
+        <ENCOUNTER_ORIGIN><%=data.get("encounter_origin").toString() %></ENCOUNTER_ORIGIN>
+        <MSG_ID><%= input_vars.get("msg_received_time") %></MSG_ID>
+    </problem>
+<% } %>
+#}

@@ -1,0 +1,64 @@
+
+ [#
+    Always
+ #]
+ Template {#
+    <%
+        if ( input.get("PID.2/CX.1").equals("") || input.get("PID.2/CX.4/HD.1").equals("")) {
+            data.put("patientMRN", input.get("PID.3/CX.1"));
+            if(input.get("PID.3/CX.4/HD.2").toString().equals("")) {
+                data.put("patientAA", input.get("PID.3/CX.4/HD.1"));
+                data.put("source", input.get("PID.3/CX.4/HD.1"));
+            } else {
+                data.put("patientAA", input.get("PID.3/CX.4/HD.2"));
+                data.put("source", input.get("PID.3/CX.4/HD.2"));
+            }
+        } else {
+            data.put("patientMRN", input.get("PID.2/CX.1"));
+            data.put("patientAA", input.get("PID.2/CX.4/HD.1"));
+            data.put("source", input.get("PID.2/CX.4/HD.1"));
+        }
+       
+        if(input.get("MSH.4/HD.1").toString().indexOf('.') > 0){
+            data.remove("source");
+            data.put("source", input.get("MSH.4/HD.1"));
+        }
+        if(data.get("patientAA").equals("") && data.get("source").equals("")) {
+            data.put("patientAA", properties.get("SINGLEDOMAINSYSTEMOID"));
+            data.put("source", properties.get("SINGLEDOMAINSYSTEMOID"));
+        }
+    %>
+ #}
+
+<# AliasBuild.rule #>
+<# AL1.rule #>
+<# PR1.rule #>
+<# PRB.rule #>
+<# ORU.rule #>
+<# Encounter.rule #>
+<# VXU.rule #>
+<# ORM.rule #>
+<# MDM.rule #>
+<# FT1.rule #>
+<# EncounterLocTable.rule #>
+<# PRBTable.rule #>
+<# ORUTable.rule #>
+<# ORMTable.rule #>
+<# AL1Table.rule #>
+<# SIU.rule #>
+<# SIUTable.rule #>
+
+/* Code system transformation template */
+[#
+  ID: CodeSystemId
+#]
+Table {#
+  LOINC  = 2.16.840.1.113883.6.1
+  CPT-4 = 2.16.840.1.113883.6.12
+  ICD9 = 2.16.840.1.113883.6.1
+  ICD-9-CM = 2.16.840.1.113883.6.1
+  ICD-9 CM = 2.16.840.1.113883.6.1
+  RxNorm = 2.16.840.1.113883.6.88
+  WBC = 2.16.840.1.113883.6.2
+  SNOMED CT = 2.16.840.1.113883.6.96
+#}

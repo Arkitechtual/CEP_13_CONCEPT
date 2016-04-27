@@ -1,0 +1,808 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation = "schema/query.xsd">
+    <QueryBuilderConfig module-name = "QueryBuilder" parser-class = "com.sun.mdm.index.configurator.impl.querybuilder.QueryBuilderConfiguration">
+        <query-builder
+            name = "ALPHA-SEARCH"
+            class = "com.sun.mdm.index.querybuilder.BasicQueryBuilder"
+            parser-class = "com.sun.mdm.index.configurator.impl.querybuilder.KeyValueConfiguration"
+            standardize = "false"
+            phoneticize = "false"><!--Do not use this query-builder for PIX/PDQ/XCPD searches -->
+            <config>
+                <option key = "UseWildcard" value = "true"/>
+            </config>
+        </query-builder>
+        <query-builder
+            name = "PHONETIC-SEARCH"
+            class = "com.browsersoft.querybuilder.BlockerQueryBuilder"
+            parser-class = "com.sun.mdm.index.configurator.impl.blocker.BlockerConfig"
+            standardize = "true"
+            phoneticize = "true">
+            <config>
+                <block-definition number = "ID0">
+                    <hint></hint>
+                    <block-rule>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.FirstName_Phon</field>
+                            <source>Patient.FirstName_Phon</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.LastName_Phon</field>
+                            <source>Patient.LastName_Phon</source>
+                        </equals>
+                    </block-rule>
+                </block-definition>
+            </config>
+        </query-builder>
+        <query-builder
+            name = "BLOCKER-SEARCH"
+            class = "com.browsersoft.querybuilder.BlockerQueryBuilder"
+            parser-class = "com.sun.mdm.index.configurator.impl.blocker.BlockerConfig"
+            standardize = "true"
+            phoneticize = "true">
+            <config>
+                <block-definition number = "ID0">
+                    <hint></hint>
+                    <block-rule>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.LastName_Phon</field>
+                            <source>Patient.LastName_Phon</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.DOB</field>
+                            <source>Patient.DOB</source>
+                        </equals>
+                    </block-rule>
+                </block-definition>
+                <block-definition number = "ID1">
+                    <hint></hint>
+                    <block-rule>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.LastName_Phon</field>
+                            <source>Patient.LastName_Phon</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.FirstName_Phon</field>
+                            <source>Patient.FirstName_Phon</source>
+                        </equals>
+                    </block-rule>
+                </block-definition>
+                <block-definition number = "ID2">
+                    <hint></hint>
+                    <block-rule>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.SSN</field>
+                            <source>Patient.SSN</source>
+                        </equals>
+                    </block-rule>
+                </block-definition>
+                <block-definition number = "ID3">
+                    <hint></hint>
+                    <block-rule>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.AddressLine1_HouseNo</field>
+                            <source>Patient.Address.AddressLine1_HouseNo</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.AddressLine1_StPhon</field>
+                            <source>Patient.Address.AddressLine1_StPhon</source>
+                        </equals>
+                    </block-rule>
+                </block-definition>
+            </config>
+        </query-builder>
+        <query-builder
+            name = "BLOCKER-SEARCH2"
+            class = "com.browsersoft.querybuilder.BlockerQueryBuilder"
+            parser-class = "com.sun.mdm.index.configurator.impl.blocker.BlockerConfig"
+            standardize = "true"
+            phoneticize = "true">
+            <config>
+                <block-definition number = "ID0">
+                    <hint></hint>
+                    <block-rule>
+                        <starts-with>
+                            <field>Enterprise.SystemSBR.Patient.FirstName</field>
+                            <source>Patient.FirstName</source>
+                        </starts-with>
+                        <starts-with>
+                            <field>Enterprise.SystemSBR.Patient.LastName</field>
+                            <source>Patient.LastName</source>
+                        </starts-with>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.DOB</field>
+                            <source>Patient.DOB</source>
+                        </equals>
+                    </block-rule>
+                </block-definition>
+                <block-definition number = "ID1">
+                    <hint></hint>
+                    <block-rule>
+                        <starts-with>
+                            <field>Enterprise.SystemSBR.Patient.FirstName</field>
+                            <source>Patient.FirstName</source>
+                        </starts-with>
+                        <starts-with>
+                            <field>Enterprise.SystemSBR.Patient.LastName</field>
+                            <source>Patient.LastName</source>
+                        </starts-with>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.SSN</field>
+                            <source>Patient.SSN</source>
+                        </equals>
+                    </block-rule>
+                </block-definition>
+            </config>
+        </query-builder>
+        <query-builder
+            name = "CMRN"
+            class = "com.browsersoft.querybuilder.BlockerQueryBuilder"
+            parser-class = "com.sun.mdm.index.configurator.impl.blocker.BlockerConfig"
+            standardize = "false"
+            phoneticize = "false">
+            <config>
+                <block-definition number = "ID0">
+                    <hint></hint>
+                    <block-rule>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.CMRN</field>
+                            <source>Patient.CMRN</source>
+                        </equals>
+                    </block-rule>
+                </block-definition>
+            </config>
+        </query-builder>
+        <query-builder
+            name = "IHE-EXACT-XCPD"
+            class = "com.browsersoft.querybuilder.BlockerQueryBuilder"
+            parser-class = "com.sun.mdm.index.configurator.impl.blocker.BlockerConfig"
+            standardize = "false"
+            phoneticize = "false"><!--Uses exact matching for all fields. Implemented as a                  Blocking Query for speed, but uses                 required="false" to allow for optional fields for all                 except FirstName, LastName, and DOB, and even these are                 optional in the IHE XCPD searches if a Patient System or                 Enterprise ID is known.                 DOB is configured as a range search but can also be                  run as an exact search.            -->
+            <config>
+                <block-definition number = "ID0">
+                    <hint></hint>
+                    <block-rule>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.LastName</field>
+                            <source>Patient.LastName</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.FirstName</field>
+                            <source>Patient.FirstName</source>
+                        </equals>
+                        <range>
+                            <field>Enterprise.SystemSBR.Patient.DOB</field>
+                            <source>Patient.DOB</source>
+                        </range>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Gender</field>
+                            <source required = "false">Patient.Gender</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.SSN</field>
+                            <source required = "false">Patient.SSN</source>
+                        </equals>
+                    </block-rule>
+                </block-definition>
+            </config>
+        </query-builder>
+        <query-builder
+            name = "IHE-EXACT-NMSRCH"
+            class = "com.browsersoft.querybuilder.BlockerQueryBuilder"
+            parser-class = "com.sun.mdm.index.configurator.impl.blocker.BlockerConfig"
+            standardize = "true"
+            phoneticize = "true"><!--Uses exact matching for all fields except for the Patient                 First and Last name fields which are configured for                  standardized, phonetic matches. Implemented as a                  Blocking Query  for speed, but uses                 required="false" to allow for optional fields for all                 except FirstName, LastName, and DOB, and even these are                 optional in the IHE searches if a Patient System or                 Enterprise ID is known.                 DOB is configured as a range search but can also be                  run as an exact search.            -->
+            <config>
+                <block-definition number = "ID0">
+                    <hint></hint>
+                    <block-rule>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.LastName_Phon</field>
+                            <source>Patient.LastName_Phon</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.FirstName_Phon</field>
+                            <source>Patient.FirstName_Phon</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.MiddleName</field>
+                            <source required = "false">Patient.MiddleName</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Suffix</field>
+                            <source required = "false">Patient.Suffix</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Title</field>
+                            <source required = "false">Patient.Title</source>
+                        </equals>
+                        <range>
+                            <field>Enterprise.SystemSBR.Patient.DOB</field>
+                            <source>Patient.DOB</source>
+                        </range>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Gender</field>
+                            <source required = "false">Patient.Gender</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.SSN</field>
+                            <source required = "false">Patient.SSN</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.MotherMN</field>
+                            <source required = "false">Patient.MotherMN</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.MotherName</field>
+                            <source required = "false">Patient.MotherName</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.DriverLicense</field>
+                            <source required = "false">Patient.DriverLicense</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.DriverLicenseSt</field>
+                            <source required = "false">Patient.DriverLicenseSt</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.AddressLine1</field>
+                            <source required = "false">Patient.Address.AddressLine1</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.AddressLine2</field>
+                            <source required = "false">Patient.Address.AddressLine2</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.City</field>
+                            <source required = "false">Patient.Address.City</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.StateCode</field>
+                            <source required = "false">Patient.Address.StateCode</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.PostalCode</field>
+                            <source required = "false">Patient.Address.PostalCode</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.PostalCodeExt</field>
+                            <source required = "false">Patient.Address.PostalCodeExt</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.County</field>
+                            <source required = "false">Patient.Address.County</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.CountryCode</field>
+                            <source required = "false">Patient.Address.CountryCode</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Phone.Phone</field>
+                            <source required = "false">Patient.Phone.Phone</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Phone.PhoneExt</field>
+                            <source required = "false">Patient.Phone.PhoneExt</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.PobCity</field>
+                            <source required = "false">Patient.PobCity</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.PobState</field>
+                            <source required = "false">Patient.PobState</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.PobCountry</field>
+                            <source required = "false">Patient.PobCountry</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.PCP_Id</field>
+                            <source required = "false">Patient.PCP_Id</source>
+                        </equals>
+                    </block-rule>
+                </block-definition>
+            </config>
+        </query-builder>
+        <query-builder
+            name = "IHE-SRCH"
+            class = "com.browsersoft.querybuilder.BlockerQueryBuilder"
+            parser-class = "com.sun.mdm.index.configurator.impl.blocker.BlockerConfig"
+            standardize = "true"
+            phoneticize = "true"><!--Uses standardized, phonetic matching where possible,                  including the Patient First and Last name fields.                  Exact matching for the remaining fields.                 Implemented as a Blocking Query for speed, but uses                 required="false" to allow for optional fields for all                 except FirstName, LastName, and DOB, and even these are                 optional in the IHE searches if a Patient System or                 Enterprise ID is known.                 DOB is configured as a range search but can also be                  run as an exact search.                 TODO: Mother's names phonetic match            -->
+            <config>
+                <block-definition number = "ID0">
+                    <hint></hint>
+                    <block-rule>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.LastName_Phon</field>
+                            <source>Patient.LastName_Phon</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.FirstName_Phon</field>
+                            <source>Patient.FirstName_Phon</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.MiddleName</field>
+                            <source required = "false">Patient.MiddleName</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Suffix</field>
+                            <source required = "false">Patient.Suffix</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Title</field>
+                            <source required = "false">Patient.Title</source>
+                        </equals>
+                        <range>
+                            <field>Enterprise.SystemSBR.Patient.DOB</field>
+                            <source>Patient.DOB</source>
+                        </range>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Gender</field>
+                            <source required = "false">Patient.Gender</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.SSN</field>
+                            <source required = "false">Patient.SSN</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.MotherMN</field>
+                            <source required = "false">Patient.MotherMN</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.MotherName</field>
+                            <source required = "false">Patient.MotherName</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.DriverLicense</field>
+                            <source required = "false">Patient.DriverLicense</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.DriverLicenseSt</field>
+                            <source required = "false">Patient.DriverLicenseSt</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.AddressLine1_HouseNo</field>
+                            <source required = "false">Patient.Address.AddressLine1_HouseNo</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.AddressLine1_StPhon</field>
+                            <source required = "false">Patient.Address.AddressLine1_StPhon</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.AddressLine1_StDir</field>
+                            <source required = "false">Patient.Address.AddressLine1_StDir</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.AddressLine1_StType</field>
+                            <source required = "false">Patient.Address.AddressLine1_StType</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.AddressLine2</field>
+                            <source required = "false">Patient.Address.AddressLine2</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.City</field>
+                            <source required = "false">Patient.Address.City</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.StateCode</field>
+                            <source required = "false">Patient.Address.StateCode</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.PostalCode</field>
+                            <source required = "false">Patient.Address.PostalCode</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.PostalCodeExt</field>
+                            <source required = "false">Patient.Address.PostalCodeExt</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.County</field>
+                            <source required = "false">Patient.Address.County</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.CountryCode</field>
+                            <source required = "false">Patient.Address.CountryCode</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Phone.Phone</field>
+                            <source required = "false">Patient.Phone.Phone</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Phone.PhoneExt</field>
+                            <source required = "false">Patient.Phone.PhoneExt</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.PobCity</field>
+                            <source required = "false">Patient.PobCity</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.PobState</field>
+                            <source required = "false">Patient.PobState</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.PobCountry</field>
+                            <source required = "false">Patient.PobCountry</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.PCP_Id</field>
+                            <source required = "false">Patient.PCP_Id</source>
+                        </equals>
+                    </block-rule>
+                </block-definition>
+            </config>
+        </query-builder>
+        <query-builder
+            name = "IHE-SRCH-NMEXACT"
+            class = "com.browsersoft.querybuilder.BlockerQueryBuilder"
+            parser-class = "com.sun.mdm.index.configurator.impl.blocker.BlockerConfig"
+            standardize = "true"
+            phoneticize = "true"><!--Uses standardized, phonetic matching where possible,                  except for the Patient First and Last name fields.                  Implemented as a Blocking Query for speed, but uses                 required="false" to allow for optional fields for all                 except FirstName, LastName, and DOB, and even these are                 optional in the IHE searches if a Patient System or                 Enterprise ID is known.                 DOB is configured as a range search but can also be                  run as an exact search.            -->
+            <config>
+                <block-definition number = "ID0">
+                    <hint></hint>
+                    <block-rule>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.LastName</field>
+                            <source>Patient.LastName</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.FirstName</field>
+                            <source>Patient.FirstName</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.MiddleName</field>
+                            <source required = "false">Patient.MiddleName</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Suffix</field>
+                            <source required = "false">Patient.Suffix</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Title</field>
+                            <source required = "false">Patient.Title</source>
+                        </equals>
+                        <range>
+                            <field>Enterprise.SystemSBR.Patient.DOB</field>
+                            <source>Patient.DOB</source>
+                        </range>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Gender</field>
+                            <source required = "false">Patient.Gender</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.SSN</field>
+                            <source required = "false">Patient.SSN</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.MotherMN</field>
+                            <source required = "false">Patient.MotherMN</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.MotherName</field>
+                            <source required = "false">Patient.MotherName</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.DriverLicense</field>
+                            <source required = "false">Patient.DriverLicense</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.DriverLicenseSt</field>
+                            <source required = "false">Patient.DriverLicenseSt</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.AddressLine1_HouseNo</field>
+                            <source required = "false">Patient.Address.AddressLine1_HouseNo</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.AddressLine1_StPhon</field>
+                            <source required = "false">Patient.Address.AddressLine1_StPhon</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.AddressLine1_StDir</field>
+                            <source required = "false">Patient.Address.AddressLine1_StDir</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.AddressLine1_StType</field>
+                            <source required = "false">Patient.Address.AddressLine1_StType</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.AddressLine2</field>
+                            <source required = "false">Patient.Address.AddressLine2</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.City</field>
+                            <source required = "false">Patient.Address.City</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.StateCode</field>
+                            <source required = "false">Patient.Address.StateCode</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.PostalCode</field>
+                            <source required = "false">Patient.Address.PostalCode</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.PostalCodeExt</field>
+                            <source required = "false">Patient.Address.PostalCodeExt</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.County</field>
+                            <source required = "false">Patient.Address.County</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.CountryCode</field>
+                            <source required = "false">Patient.Address.CountryCode</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Phone.Phone</field>
+                            <source required = "false">Patient.Phone.Phone</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Phone.PhoneExt</field>
+                            <source required = "false">Patient.Phone.PhoneExt</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.PobCity</field>
+                            <source required = "false">Patient.PobCity</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.PobState</field>
+                            <source required = "false">Patient.PobState</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.PobCountry</field>
+                            <source required = "false">Patient.PobCountry</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.PCP_Id</field>
+                            <source required = "false">Patient.PCP_Id</source>
+                        </equals>
+                    </block-rule>
+                </block-definition>
+            </config>
+        </query-builder>
+        <query-builder
+            name = "IHE-EXACT-PDQ"
+            class = "com.browsersoft.querybuilder.BlockerQueryBuilder"
+            parser-class = "com.sun.mdm.index.configurator.impl.blocker.BlockerConfig"
+            standardize = "false"
+            phoneticize = "false"><!--Uses exact matching for all fields. Implemented as a                  Blocking Query for speed, but uses                 required="false" to allow for optional fields. Note that                 in this version even FirstName, LastName, and DOB are                 optional.             -->
+            <config>
+                <block-definition number = "ID0">
+                    <hint></hint>
+                    <block-rule>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.LastName</field>
+                            <source required = "false">Patient.LastName</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.FirstName</field>
+                            <source required = "false">Patient.FirstName</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.MiddleName</field>
+                            <source required = "false">Patient.MiddleName</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Suffix</field>
+                            <source required = "false">Patient.Suffix</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Title</field>
+                            <source required = "false">Patient.Title</source>
+                        </equals>
+                        <range>
+                            <field>Enterprise.SystemSBR.Patient.DOB</field>
+                            <source required = "false">Patient.DOB</source>
+                        </range>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Gender</field>
+                            <source required = "false">Patient.Gender</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.SSN</field>
+                            <source required = "false">Patient.SSN</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.MotherMN</field>
+                            <source required = "false">Patient.MotherMN</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.MotherName</field>
+                            <source required = "false">Patient.MotherName</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.DriverLicense</field>
+                            <source required = "false">Patient.DriverLicense</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.DriverLicenseSt</field>
+                            <source required = "false">Patient.DriverLicenseSt</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.AddressLine1</field>
+                            <source required = "false">Patient.Address.AddressLine1</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.AddressLine2</field>
+                            <source required = "false">Patient.Address.AddressLine2</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.City</field>
+                            <source required = "false">Patient.Address.City</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.StateCode</field>
+                            <source required = "false">Patient.Address.StateCode</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.PostalCode</field>
+                            <source required = "false">Patient.Address.PostalCode</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.PostalCodeExt</field>
+                            <source required = "false">Patient.Address.PostalCodeExt</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.County</field>
+                            <source required = "false">Patient.Address.County</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.CountryCode</field>
+                            <source required = "false">Patient.Address.CountryCode</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Phone.Phone</field>
+                            <source required = "false">Patient.Phone.Phone</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Phone.PhoneExt</field>
+                            <source required = "false">Patient.Phone.PhoneExt</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.PobCity</field>
+                            <source required = "false">Patient.PobCity</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.PobState</field>
+                            <source required = "false">Patient.PobState</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.PobCountry</field>
+                            <source required = "false">Patient.PobCountry</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.PCP_Id</field>
+                            <source required = "false">Patient.PCP_Id</source>
+                        </equals>
+                    </block-rule>
+                </block-definition>
+            </config>
+        </query-builder>
+		<query-builder name="Tiger-XCPD" class="com.browsersoft.querybuilder.BlockerQueryBuilder" 
+               parser-class="com.sun.mdm.index.configurator.impl.blocker.BlockerConfig" 
+               standardize="false" phoneticize="false">
+            <!-- 
+                 Uses exact matching for all fields. Implemented as a 
+                 Blocking Query for speed, but uses
+                 required="false" to allow for optional fields for all
+                 except FirstName, LastName, and DOB, and even these are
+                 optional in the IHE XCPD searches if a Patient System or
+                 Enterprise ID is known.
+                 DOB is configured as a range search but can also be 
+                 run as an exact search.
+            -->
+            <config>
+                <block-definition  number="ID0">
+                    <hint></hint>
+                    <block-rule>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.LastName</field>
+                            <source required="false">Patient.LastName</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.FirstName</field>
+                            <source required="false">Patient.FirstName</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.MiddleName</field>
+                            <source required="false">Patient.MiddleName</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Suffix</field>
+                            <source required="false">Patient.Suffix</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Title</field>
+                            <source required="false">Patient.Title</source>
+                        </equals>
+                        <range>
+                            <field>Enterprise.SystemSBR.Patient.DOB</field>
+                            <source required="false">Patient.DOB</source>
+                        </range>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Gender</field>
+                            <source required="false">Patient.Gender</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.MotherMN</field>
+                            <source required="false">Patient.MotherMN</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.MotherName</field>
+                            <source required="false">Patient.MotherName</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.DriverLicense</field>
+                            <source required="false">Patient.DriverLicense</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.DriverLicenseSt</field>
+                            <source required="false">Patient.DriverLicenseSt</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.AddressLine1</field>
+                            <source required="false">Patient.Address.AddressLine1</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.AddressLine2</field>
+                            <source required="false">Patient.Address.AddressLine2</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.City</field>
+                            <source required="false">Patient.Address.City</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.StateCode</field>
+                            <source required="false">Patient.Address.StateCode</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.PostalCode</field>
+                            <source required="false">Patient.Address.PostalCode</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.PostalCodeExt</field>
+                            <source required="false">Patient.Address.PostalCodeExt</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.County</field>
+                            <source required="false">Patient.Address.County</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Address.CountryCode</field>
+                            <source required="false">Patient.Address.CountryCode</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Phone.Phone</field>
+                            <source required="false">Patient.Phone.Phone</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.Phone.PhoneExt</field>
+                            <source required="false">Patient.Phone.PhoneExt</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.PobCity</field>
+                            <source required="false">Patient.PobCity</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.PobState</field>
+                            <source required="false">Patient.PobState</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.PobCountry</field>
+                            <source required="false">Patient.PobCountry</source>
+                        </equals>
+                        <equals>
+                            <field>Enterprise.SystemSBR.Patient.PCP_Id</field>
+                            <source required="false">Patient.PCP_Id</source>
+                        </equals>
+                    </block-rule>
+                </block-definition>
+            </config>
+        </query-builder>
+    </QueryBuilderConfig>
+</Configuration>
+
+

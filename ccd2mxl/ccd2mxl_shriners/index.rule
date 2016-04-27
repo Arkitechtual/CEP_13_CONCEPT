@@ -1,0 +1,349 @@
+<ClinicalDocument> [# <% globalProcedureMap = new HashMap(); globalEncounterMap = new HashMap(); %> #]
+
+<section> [# <% globalContentMap = new HashMap(); globalTextSectionIdentificator = ""; entryProcessed = false; textProcessedCnt = 0; sectionId = ""; %> #],</section> {#
+   <templateId root="2.16.840.1.113883.10.20.1.2"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.22.2.6.1"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.1.6"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.22.2.2"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.22.2.1"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.22.2.2.1"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.1.8"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.22.2.1.1"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.1.11"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.22.2.5.1"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.1.14"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.22.2.3"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.22.2.3.1"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.1.16"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.21.2.4"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.21.2.4.1"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.22.2.4"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.22.2.4.1"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.22.1.5"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.1.12"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.22.2.7.1"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.22.2.22"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.22.2.14"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.1.15"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.3.88.11.83.126"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.22.2.17"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.1.4"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.1.1"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.22.2.9"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.2.7"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.22.2.12"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.22.2.21"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.22.2.15"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.1.3"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.22.2.10"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.2.10"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.22.2.41"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <templateId root="2.16.840.1.113883.10.20.22.4.1"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+<templateId root="2.16.840.1.113883.10.20.22.4.2"> [# <% globalTextSectionIdentificator = _root + "text"; %> #]
+   <text>[# <% textProcessedCnt++; if(!globalTextSectionIdentificator.equals("") && textProcessedCnt==1) {
+    if(globalTextSectionIdentificator.equals("2.16.840.1.113883.10.20.22.2.12text")){%> <*RECURSIVE_XML_TO_MAP(globalEncounterMap,ID)*> <% } else { %><*RECURSIVE_XML_TO_MAP(globalContentMap,ID)*> <% } }%> #],</text>
+#}
+
+/* commented out by Kevin, 10/03/2013, per instructions from Lance */
+/* <id> [# <% globalAssigningAuthorityName = _assigningAuthorityName  %> #] */
+<id> [# <% if ( binding.variables.containsKey("_assigningAuthorityName") ) globalAssigningAuthorityName = _assigningAuthorityName  %> #]
+<effectiveTime> [# <% if ( !binding.variables.containsKey("globalDocumentTs") ) globalDocumentTs = _value %>#]
+<componentOf><encompassingEncounter><id> [# <% if ( !binding.variables.containsKey("globalEncounterId")){globalEncounterId = _extension;} %> #]
+<componentOf>[# <% countName = 0;  %> #],</componentOf> {#
+  <encompassingEncounter><encounterParticipant typeCode='ATND'><assignedEntity><assignedPerson>[# <% countName = 0;  %> #],</assignedPerson>  {#
+      <given> [# <%
+           if ( countName == 0 ) {
+                globalAssignedFirstName = _textValue;
+           } else {
+                globalAssignedMiddleName = _textValue;
+           }
+           countName++;
+           %>
+      #]
+  #}
+#}
+<componentOf><encompassingEncounter><encounterParticipant><assignedEntity><assignedPerson><name><family> [# <% if ( !binding.variables.containsKey("globalAssignedLastName")){globalAssignedLastName = _textValue;} %> #]
+<componentOf><encompassingEncounter><encounterParticipant><assignedEntity><assignedPerson><name><suffix> [# <% if ( !binding.variables.containsKey("globalAssignedSuffixName")){globalAssignedSuffixName = _textValue;} %> #]
+<componentOf><encompassingEncounter><encounterParticipant><assignedEntity><id> [# <% if ( !binding.variables.containsKey("globalAssignedId")){globalAssignedId = _extension;} %> #]
+<componentOf><encompassingEncounter><encounterParticipant><assignedEntity><id> [# <% if ( !binding.variables.containsKey("globalAssignedOId")){globalAssignedOId = _root;} %> #]
+<effectiveTime> [# <% if ( !binding.variables.containsKey("globalDocumentTs") ) globalDocumentTs = _value %>#]
+<documentationOf><effectiveTime><low> [# <%  globalServiceEventStart = _value %> #]
+<documentationOf><effectiveTime><high> [# <%  globalServiceEventEnd = _value %> #]
+
+/* Changing the below logic to check the name before getting the OID.  Necessary for out-of-community partners */
+<author><representedOrganization><name> [# <%  globalAuthor = _textValue %> #]
+<author><representedOrganization><id> [# <% if ( _root.contains(".") && !binding.variables.containsKey("globalAuthor") ) 
+												{ 
+												globalAuthor = _root; 
+												globalAuthorOID = _root;
+												} 
+											else {
+												globalAuthorOID = _root;
+											}
+%> #]
+
+<custodian><assignedCustodian><representedCustodianOrganization><name> [# <% if (!binding.variables.containsKey("globalAuthor")) { globalAuthor = _textValue; } %> #]
+<custodian><assignedCustodian><representedCustodianOrganization><id> [# <%
+if ( !_root.trim().equals("") && !binding.variables.containsKey("globalAuthor") && !binding.variables.containsKey("globalAuthorOID"))
+{
+    globalAuthor = _root;
+    globalAuthorOID = _root;
+}
+else if (!_root.trim().equals("") && !binding.variables.containsKey("globalAuthorOID")) {
+    globalAuthorOID = _root;
+}
+%> #]
+
+/*
+	TEMPLATEID additions - Add templateId tag/code for each OID even if there is more than one per xsl section 
+	CONDITION LOGIC additions - Add codes for each section. If new section is added,add to OBSERVATION tag as too.
+*/
+
+/* ALLERGIES */
+<templateId root="2.16.840.1.113883.10.20.1.2">, </section> {#
+      <entry> [# <*XSLT_FILE(ccd2mxl-allergies.xsl)*> #]
+#}
+<templateId root="2.16.840.1.113883.10.20.22.2.6.1">, </section> {#
+      <entry> [# <*XSLT_FILE(ccd2mxl-allergies.xsl)*> #]
+#}
+/* IMMUNIZATIONS */
+<templateId root="2.16.840.1.113883.10.20.1.6">, </section> {#
+      <entry> [# <*XSLT_FILE(ccd2mxl-sections-immunization.xsl)*> #]
+#}
+<templateId root="2.16.840.1.113883.10.20.22.2.2">, </section> {#
+      <entry> [# <*XSLT_FILE(ccd2mxl-sections-immunization.xsl)*> #]
+#}
+<templateId root="2.16.840.1.113883.10.20.22.2.1">, </section> {#
+      <entry> [# <*XSLT_FILE(ccd2mxl-sections-immunization.xsl)*> #]
+#}
+<templateId root="2.16.840.1.113883.10.20.22.2.2.1">, </section> {#
+      <entry> [# <*XSLT_FILE(ccd2mxl-sections-immunization.xsl)*> #]
+#}
+/* MEDICATIONS */
+<templateId root="2.16.840.1.113883.10.20.1.8">, </section> {#
+      <entry> [# <*XSLT_FILE(ccd2mxl-sections-medications.xsl)*> #]
+#}
+<templateId root="2.16.840.1.113883.10.20.22.2.1.1">, </section> {#
+      <entry> [# <*XSLT_FILE(ccd2mxl-sections-medications.xsl)*> #]
+#}
+/* PROBLEMS */
+<templateId root="2.16.840.1.113883.10.20.1.11">, </section> {#
+      <entry> [# <*XSLT_FILE(ccd2mxl-sections-problems.xsl)*> #]
+#}
+<templateId root="2.16.840.1.113883.10.20.22.2.5.1">, </section> {#
+      <entry> [# <*XSLT_FILE(ccd2mxl-sections-problems.xsl)*> #]
+#}
+
+/* LAB RESULTS - New section-level processing */
+<templateId root="2.16.840.1.113883.10.20.1.14">, </section> {#
+<entry> [# <*XSLT_FILE(ccd2mxl-results-section-index.xsl)*> #]
+#}
+
+<templateId root="2.16.840.1.113883.10.20.22.2.3">, </section> {#
+<entry> [# <*XSLT_FILE(ccd2mxl-results-section-index.xsl)*> #]
+#}
+
+<templateId root="2.16.840.1.113883.10.20.22.2.3.1">, </section> {#
+<entry> [# <*XSLT_FILE(ccd2mxl-results-section-index.xsl)*> #]
+#}
+
+/* VITAL SIGNS - New section-level processing*/
+
+<templateId root="2.16.840.1.113883.10.20.1.16">,</section> {#
+      <entry> [# <*XSLT_FILE(ccd2mxl-sections-vital-signs.xsl)*> #]
+#}
+
+<templateId root="2.16.840.1.113883.10.20.21.2.4">, </section> {#
+      <entry> [# <*XSLT_FILE(ccd2mxl-sections-vital-signs.xsl)*> #]
+#}
+
+<templateId root="2.16.840.1.113883.10.20.21.2.4.1">, </section> {#
+      <entry> [# <*XSLT_FILE(ccd2mxl-sections-vital-signs.xsl)*> #]
+#}
+
+<templateId root="2.16.840.1.113883.10.20.22.2.4">, </section> {#
+      <entry> [# <*XSLT_FILE(ccd2mxl-sections-vital-signs.xsl)*> #]
+#}
+
+<templateId root="2.16.840.1.113883.10.20.22.2.4.1">, </section> {#
+      <entry> [# <*XSLT_FILE(ccd2mxl-sections-vital-signs.xsl)*> #]
+#}
+
+
+/* RESULTS - RADIOLOGY */
+<templateId root="2.16.840.1.113883.10.20.22.1.5">, </section> {#
+      <entry> [# <*XSLT_FILE(ccd2mxl-sections-results.xsl)*> #]
+#}
+
+
+/* MICROBIOLOGY */
+<templateId root="2.16.840.1.113883.10.20.22.4.1">, </section> {#
+      <entry> [# <*XSLT_FILE(ccd2mxl-sections-micro.xsl)*> #]
+#}
+<templateId root="2.16.840.1.113883.10.20.22.4.2">, </section> {#
+      <entry> [# <*XSLT_FILE(ccd2mxl-sections-micro.xsl)*> #]
+#}
+
+
+/* LAB RESULTS C37 
+<templateId root="2.16.840.1.113883.10.20.1.14">, </section> {#
+      <entry><act><entryRelationship> [# <*XSLT_FILE(ccd2mxl-sections-labs-results-c37.xsl)*> #]
+#}*/
+
+/* PROCEDURES */
+<templateId root="2.16.840.1.113883.10.20.1.12">, </section> {#
+      <entry> [# <*XSLT_FILE(ccd2mxl-sections-procedures.xsl)*> #]
+#}
+<templateId root="2.16.840.1.113883.10.20.22.2.7.1">, </section> {#
+      <entry> [# <*XSLT_FILE(ccd2mxl-sections-procedures.xsl)*> #]
+#}
+/* ENCOUNTER/VISITS
+46240-8 below should cover both CCD and CCDA templates
+<templateId root="2.16.840.1.113883.10.20.22.2.22">, </section> {#
+      <entry><encounter> [# <*XSLT_FILE(ccd2mxl-sections-encounters.xsl)*> #]
+#}
+<templateId root="2.16.840.1.113883.10.20.22.2.14">, </section> {#
+   <section> [# <*XSLT_FILE(ccd2mxl-sections-encounters.xsl)*> #]
+#}
+*/
+<code code="46240-8">, </section> {#
+      <entry><encounter> [# <*XSLT_FILE(ccd2mxl-sections-encounters.xsl)*> #]
+#}
+
+/* SOCIAL HISTORY   */
+
+<templateId root="2.16.840.1.113883.10.20.1.15">[# <% sectionId = "2.16.840.1.113883.10.20.1.15"; %> #], </section> [#
+    <%  if (!entryProcessed && sectionId.equals("2.16.840.1.113883.10.20.1.15"))  { %>
+        <*NO_INPUT_XSLT_FILE(ccd2mxl-sections-socialhistory.xsl)*>
+    <% } %>
+#] {#
+     <entry> [#
+        <% entryProcessed = true %>
+        <*XSLT_FILE(ccd2mxl-sections-socialhistory.xsl)*>
+     #]
+#}
+
+<templateId root="2.16.840.1.113883.3.88.11.83.126">[# <% sectionId = "2.16.840.1.113883.3.88.11.83.126"; %> #], </section> [#
+    <% if (!entryProcessed && sectionId.equals("2.16.840.1.113883.3.88.11.83.126"))  { %>
+        <*NO_INPUT_XSLT_FILE(ccd2mxl-sections-socialhistory.xsl)*>
+    <% } %>
+#] {#
+     <entry> [#
+        <% entryProcessed = true %>
+        <*XSLT_FILE(ccd2mxl-sections-socialhistory.xsl)*>
+     #]
+#}
+
+<templateId root="2.16.840.1.113883.10.20.22.2.17">[# <% sectionId = "2.16.840.1.113883.10.20.22.2.17"; %> #], </section> [#
+    <% if (!entryProcessed && sectionId.equals("2.16.840.1.113883.10.20.22.2.17"))  { %>
+        <*NO_INPUT_XSLT_FILE(ccd2mxl-sections-socialhistory.xsl)*>
+    <% } %>
+#] {#
+     <entry> [#
+        <% entryProcessed = true %>
+        <*XSLT_FILE(ccd2mxl-sections-socialhistory.xsl)*>
+     #]
+#}
+
+<templateId root="2.16.840.1.113883.10.20.1.4">[# <% sectionId = "2.16.840.1.113883.10.20.1.4"; %> #], </section> [#
+    <% if (!entryProcessed && sectionId.equals("2.16.840.1.113883.10.20.1.4"))  { %>
+        <*NO_INPUT_XSLT_FILE(ccd2mxl-sections-familyhistory.xsl)*>
+    <% } %>
+#] {#
+     <entry> [#
+        <% entryProcessed = true %>
+        <*XSLT_FILE(ccd2mxl-sections-familyhistory.xsl)*>
+     #]
+#}
+
+<templateId root="2.16.840.1.113883.10.20.22.2.15">[# <% sectionId = "2.16.840.1.113883.10.20.22.2.15"; %> #], </section> [#
+    <% if (!entryProcessed && sectionId.equals("2.16.840.1.113883.10.20.22.2.15"))  { %>
+        <*NO_INPUT_XSLT_FILE(ccd2mxl-sections-familyhistory.xsl)*>
+    <% } %>
+#] {#
+     <entry> [#
+        <% entryProcessed = true %>
+        <*XSLT_FILE(ccd2mxl-sections-familyhistory.xsl)*>
+     #]
+#}
+
+<templateId root="2.16.840.1.113883.10.20.1.1">[# <% sectionId = "2.16.840.1.113883.10.20.1.1"; %> #], </section> [#
+    <% if (!entryProcessed && sectionId.equals("2.16.840.1.113883.10.20.1.1"))  { %>
+        <*NO_INPUT_XSLT_FILE(ccd2mxl-sections-advanceddirective.xsl)*>
+    <% }  %>
+#] {#
+     <entry> [#
+        <% entryProcessed = true %>
+        <*XSLT_FILE(ccd2mxl-sections-advanceddirective.xsl)*>
+     #]
+#}
+
+<templateId root="2.16.840.1.113883.10.20.22.2.21">[# <% sectionId = "2.16.840.1.113883.10.20.22.2.21"; %> #], </section> [#
+    <% if (!entryProcessed && sectionId.equals("2.16.840.1.113883.10.20.22.2.21"))  { %>
+        <*NO_INPUT_XSLT_FILE(ccd2mxl-sections-advanceddirective.xsl)*>
+    <% }  %>
+#] {#
+     <entry> [#
+        <% entryProcessed = true %>
+        <*XSLT_FILE(ccd2mxl-sections-advanceddirective.xsl)*>
+     #]
+#}
+
+<templateId root="2.16.840.1.113883.10.20.22.2.9">[# <% sectionId = "2.16.840.1.113883.10.20.22.2.9"; %> #], </section> [#
+    <%  if (!entryProcessed && sectionId.equals("2.16.840.1.113883.10.20.22.2.9"))  { %>
+        <*NO_INPUT_XSLT_FILE(ccd2mxl-sections-assessment_plan.xsl)*>
+    <% } %>
+#] {#
+     <entry> [#
+        <% entryProcessed = true %>
+        <*XSLT_FILE(ccd2mxl-sections-assessment_plan.xsl)*>
+     #]
+#}
+
+
+<templateId root="2.16.840.1.113883.10.20.2.7">[# <% sectionId = "2.16.840.1.113883.10.20.2.7"; %> #], </section> [#
+    <% if (!entryProcessed && sectionId.equals("2.16.840.1.113883.10.20.2.7"))  { %>
+        <*NO_INPUT_XSLT_FILE(ccd2mxl-sections-planofcare.xsl)*>
+    <% }%>
+#] {#
+     <entry> [#
+        <% entryProcessed = true %>
+        <*XSLT_FILE(ccd2mxl-sections-planofcare.xsl)*>
+     #]
+#}
+
+<templateId root="2.16.840.1.113883.10.20.1.10">[# <% sectionId = "2.16.840.1.113883.10.20.1.10"; %> #], </section> [#
+    <% if (!entryProcessed && sectionId.equals("2.16.840.1.113883.10.20.1.10"))  { %>
+        <*NO_INPUT_XSLT_FILE(ccd2mxl-sections-planofcare.xsl)*>
+    <% }%>
+#] {#
+     <entry> [#
+        <% entryProcessed = true %>
+        <*XSLT_FILE(ccd2mxl-sections-planofcare.xsl)*>
+     #]
+#}
+
+<templateId root="2.16.840.1.113883.10.20.22.2.10">[# <% sectionId = "2.16.840.1.113883.10.20.22.2.10"; %> #], </section> [#
+    <% if (!entryProcessed && sectionId.equals("2.16.840.1.113883.10.20.22.2.10"))  { %>
+        <*NO_INPUT_XSLT_FILE(ccd2mxl-sections-planofcare.xsl)*>
+    <% }%>
+#] {#
+     <entry> [#
+        <% entryProcessed = true %>
+        <*XSLT_FILE(ccd2mxl-sections-planofcare.xsl)*>
+     #]
+#}
+
+<templateId root="2.16.840.1.113883.10.20.22.2.14">[# <% sectionId = "2.16.840.1.113883.10.20.22.2.14"; %> #], </section> [#
+    <%  if (!entryProcessed && sectionId.equals("2.16.840.1.113883.10.20.22.2.14"))  { %>
+        <*NO_INPUT_XSLT_FILE(ccd2mxl-sections-functional_status.xsl)*>
+    <% } %>
+#] {#
+#}
+
+<templateId root="2.16.840.1.113883.10.20.22.2.41">[# <% sectionId = "2.16.840.1.113883.10.20.22.2.41"; %> #], </section> [#
+    <%  if (!entryProcessed && sectionId.equals("2.16.840.1.113883.10.20.22.2.41"))  { %>
+        <*NO_INPUT_XSLT_FILE(ccd2mxl-sections-functional_status.xsl)*>
+    <% } %>
+#] {#
+#}

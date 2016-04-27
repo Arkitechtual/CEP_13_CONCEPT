@@ -1,0 +1,46 @@
+/* Code system transformation template */
+[#
+  ID: OrderStatusTable
+#]
+Table {#
+
+AC = Active
+NW = Active
+DC = Discontinued
+CM = Completed
+Ordered = Active
+Discontinued = Discontinued
+Canceled = Canceled
+CA = Canceled
+Completed = Completed
+Future = Future
+InProcess = InProcess
+Incomplete = Incomplete
+On Hold, Med Student = On Hold, Med Student
+Pending Complete = Pending Complete
+Pending Review = Pending Review
+Suspended = Suspended
+Transfer/Canceled = Transfer/Canceled
+Unscheduled = Unscheduled
+Voided With Results = Voided With Results
+Deleted = Deleted
+#}
+
+[#
+  ID: OrderStatusCdTable
+#]
+Table {#
+<!-- 55561003=active,73425007=inactive,415684004=rule out -->
+AC = 55561003
+NW = 55561003
+DC = 73425007
+CM = 55561003
+LACIECM = 415684004
+Ordered = 55561003
+Discontinued = 73425007
+Canceled = 415684004
+CA = 415684004
+Completed = 55561003
+LACIECompleted = 415684004
+Deleted = 73425007
+#}

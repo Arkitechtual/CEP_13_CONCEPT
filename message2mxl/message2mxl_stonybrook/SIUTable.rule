@@ -1,0 +1,22 @@
+[#
+  ID: ApptStatusTable
+#]
+Table {#
+Checked In = Checked In
+#}
+[#
+  ID: ApptTypeTable
+#]
+Table {#
+Dermatology New = Dermatology New
+#}
+
+[#
+  ID: DeptLocPV1
+#]
+Table {#
+
+2.16.840.1.113883.3.2540 = 1
+2.16.840.1.113883.3.2541 = 1
+
+#}

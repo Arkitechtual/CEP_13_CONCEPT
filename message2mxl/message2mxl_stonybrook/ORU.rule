@@ -1,0 +1,1105 @@
+/****************************************************************************************
+ *                                 MODIFICATION CONTROL LOG                             *
+ ****************************************************************************************
+ * Mod  Date     Engineer             SR Number  Comment                                *
+ * ---- -------- -------------------- ---------- ---------------------------------------*
+ * 0001 10/28/14 Patrick Housley      407491976  Implementing Millennium Power Note     *
+ *                                               Dynamic Documentation support.
+****************************************************************************************/
+[#
+   Message: ORU
+#]
+Template {#
+<%
+boolean bSkipPDF=false;
+if(input.get("Order").get(0).get("RESULT").size() && (input.get("Order").get(0).get("RESULT").get(0).get("OBX.5/CE.3").equals("PDF") ||
+    input.get("Order").get(0).get("RESULT").get(0).get("OBX.5/CE.2").equals("PDF"))) {
+    bSkipPDF=true;
+}
+if(!bSkipPDF){
+    if (((input.get("Order").get(0).get("OBR.24").equals("GRP")) && (input.get("Order").get(0).get("OBR.4/CE.5").equals("Vital Signs") || input.get("Order").get(0).get("OBR.4/CE.5").equals("Weight/Height"))) ||
+        input.get("Order").get(0).get("OBR.24").equals("Vital Signs") ||
+        input.get("Order").get(0).get("OBR.24").equals("ADLS") ||
+        input.get("Order").get(0).get("OBR.24").equals("ASSESSMENTS") ||
+        globalinput.get("MSH.5/HD.1").toString().toUpperCase().contains("VITALS")) {
+		engine.callRule("VitalSignsProcessing", input.get("Order"), data);
+	} else {
+		if((input.get("Order").get(0).get("OBR.24").equals("MICROBIOLOGY") || engine.callRule("ReportTypeTable", data.get("result_alias_group").toString() + input.get("Order").get(0).get("OBR.24"), data).equals("microbiology"))  &&
+		(input.get("Order").get(0).get("RESULT").size() && !input.get("Order").get(0).get("RESULT").get(0).get("OBX.2").toString().equals("TX")) &&
+		engine.callRule("ResultValueDataType", data.get("patientAA").toString() + input.get("Order").get(0).get("OBR.24"), data).equals("discrete")) {
+			engine.callRule("MicroResultObservationProcessing", input.get("Order"), data);
+		} else {
+			engine.callRule("ResultObservationProcessing", input.get("Order"), data);
+		}
+    }
+}
+ %>
+#}
+
+
+[#
+   Id: ResultObservationProcessing
+#]
+
+Template {#
+<%
+    String sOBR24 = input.get("OBR.24");
+    sOBR24 = sOBR24.replace(" ", "-");
+    //sOBR4  make sure the Coded Order does not have any spaces
+    String sOBR4 = input.get("OBR.4/CE.1");
+    sOBR4 = sOBR4.replace(" ", "-");
+
+    if(sOBR4.equals("Bone-Density-Report") || sOBR24.equals("SFMY-XR") ) {
+        sOBR24="RAD";
+    }
+
+    String sStatus = engine.callRule("StatusCodeTable", input.get("OBR.25"), data);
+
+    String strReportType = engine.callRule("ReportTypeTable", data.get("result_alias_group").toString() + sOBR4, data);
+    if(strReportType.equals("")) {
+        strReportType = engine.callRule("ReportTypeTable", data.get("result_alias_group").toString() + sOBR24, data);
+    }
+    if(strReportType.equals("")) {
+        strReportType = engine.callRule("ReportTypeTable", data.get("result_alias_group").toString() + globalinput.get("MSH.5/HD.1"), data);
+    }
+
+    if ( sOBR24.equals("GLB") || sOBR24.equals("ECL") || sOBR24.equals("CGS") || sOBR24.equals("LAB") || sOBR24.equals("GL") || sOBR4.equals("57023-4")  || sOBR24.equals("MD") || 
+    sOBR4.equals("24321-2")  ||  sOBR4.equals("58410-2") || sOBR24.equals("CAU") || sOBR24.equals("HC") || sOBR4.equals("24325-3") ||
+    sOBR24.equals("Surgical Pathology") || sOBR24.equals("REF") || sOBR24.equals("CR") || (sOBR24.length()> 2 && sOBR24.substring(0,3).equals("LAB") && !strReportType.equals("microbiology")) || strReportType.equals("lab-result")) { %>
+
+            <%= engine.callRule("ResultObservation", parentinput.get("Order"), data) %>
+ 
+    <% } else { 
+        String strReportID = "";
+        if(input.get("OBR.2/EI.1").equals("") || input.get("OBR.2/EI.1").equals("0")) {
+            strReportID=input.get("OBR.3/EI.1");
+        } else {
+            strReportID=input.get("OBR.2/EI.1");
+        }
+        strReportID = strReportID + sOBR4;
+
+        String strReportTextType = "";
+        input_vars.put("obx_data_type","");
+        if(input.get("RESULT").size() && input.get("RESULT").get(0).get("OBX.5/CE.1").equals("") && input.get("RESULT").get(0).get("OBX.5/CE.3").equals("RTF")) {
+            strReportTextType="ED";
+        } else if (engine.callRule("ResultValueDataType", data.get("result_alias_group").toString() + globalinput.get("MSH.5/HD.1"), data).toString().equals("rtf")) {
+            strReportTextType="ED";
+            input_vars.put("obx_data_type","RTF");
+        }
+		/* Begin Modification: 0001 */
+		else if (input.get("RESULT").size() && input.get("RESULT").get(0).get("OBX.5/CE.1").equals("") && input.get("RESULT").get(0).get("OBX.5/CE.3").equals("XHTML")) {
+            strReportTextType="ED";
+            input_vars.put("obx_data_type","XHTML");
+        }
+		/* End Modification: 0001 */
+		else if (input.get("RESULT").size() && input.get("RESULT").get(0).get("OBX.2").toString().equals("RP")) {
+            strReportTextType="RP";
+        } else if (input.get("RESULT").size() && input.get("RESULT").get(0).get("OBX.2").toString().equals("ED")) {
+			strReportTextType="ED";
+		} else {
+            strReportTextType="ST";
+        }
+
+        String strReportName = input.get("OBR.4/CE.2");
+
+        if(sOBR24.equals("AP") || sOBR24.equals("Autopsy") || sOBR24.equals("Cytology") || sOBR24.equals("Cytogenetics") || sOBR24.equals("Cytology (PAP)") || strReportType.equals("anatomic-pathology")) {
+            strReportType="anatomic-pathology";
+        } else if (sOBR24.length()> 2 && sOBR24.toUpperCase().substring(0,3).equals("RAD") || sOBR24.equals("RAD") || 
+        sOBR24.equals("CT") || strReportType.equals("radiology")) {
+            strReportType="radiology";
+            strReportName = engine.callRule("ReportNameTable", data.get("result_alias_group").toString() + sOBR4, data);
+            if(strReportName.equals("")){
+                strReportName = input.get("OBR.4/CE.2");
+            }
+        } else if (sOBR24.equals("MICROBIOLOGY") || sOBR24.equals("H") || sOBR24.equals("MB") || sOBR24.equals("CUA") || strReportType.equals("microbiology")) {
+            strReportType="microbiology";
+        } else if (sOBR4.equals("3522624") || strReportType.equals("history-physical")) {
+            strReportType="history-physical";
+            strReportName = "History and Physical";
+        } else if ( sOBR4.equals("3658357") || strReportType.equals("discharge-summary")) {
+            strReportType="discharge-summary";
+            strReportName = "Discharge Summary";
+        } else {
+            strReportType="other-reports";
+            if(sOBR4.equals("") || sOBR24.equals("Surgical Pathology") || sOBR24){
+                if(input.get("RESULT").size() && !input.get("RESULT").get(0).get("OBX.3/CE.1").equals("")) {
+                    sOBR4=input.get("RESULT").get(0).get("OBX.3/CE.1");
+                }
+            }
+            strReportName = engine.callRule("ReportNameTable", sOBR4, data);
+        }
+
+        String strReportTitle = input.get("OBR.4/CE.5");
+        if(strReportTitle.equals("")) {
+            strReportTitle=strReportName;
+        }
+
+        if (strReportName.length() > 0) {
+            input_vars.put("obx_3",null);
+            input_vars.put("report_type",strReportType);
+
+            String strVerifyLocation = engine.callRule("VerifyDateLocation", data.get("result_alias_group").toString() + sOBR24, data);
+            if(strVerifyLocation.equals("")) {
+                strVerifyLocation = engine.callRule("VerifyDateLocation", data.get("patientAA").toString() + sOBR24, data);
+            }
+            String strVerifyDate = "";
+            if(strVerifyLocation.equals("OBX14") && input.get("RESULT").size()) {
+                strVerifyDate = input.get("RESULT").get(0).get("OBX.14/TS.1").toString();
+            } else {
+                strVerifyDate = input.get("OBR.22/TS.1").toString();
+            }
+
+            String strPerformLocation = engine.callRule("PerformDateLocation", data.get("result_alias_group").toString() + sOBR24, data);
+            if(strPerformLocation.equals("")) {
+                strPerformLocation = engine.callRule("PerformDateLocation", data.get("patientAA").toString() + sOBR24, data);
+            }
+            String strPerformDate = "";
+            if(strPerformLocation.equals("OBR7")) {
+                strPerformDate = input.get("OBR.7/TS.1").toString();
+            } else {
+                strPerformDate = input.get("OBR.22/TS.1").toString();
+            }
+
+            String strAccessionNbr = input.get("OBR.20/CRA.1");
+
+            if(strReportType.equals("microbiology")){
+                %><micro><%
+            } else {%>
+                <result>
+                <SUB_TYPE><%= strReportType %></SUB_TYPE>
+            <%}%>
+
+                <SOURCE><%= data.get("source") %></SOURCE>
+                <DOCUMENT_DATETIME><%= globalinput.get("MSH.7/TS.1") %></DOCUMENT_DATETIME>
+                <DATA_TYPE><%= strReportType %></DATA_TYPE>
+                <SUB_DATA_TYPE>report</SUB_DATA_TYPE>
+                <ORDER_NAME><%= strReportName %></ORDER_NAME>
+                <ORDER_CODE><%= strReportType %></ORDER_CODE>
+                <ORDER_CODE_SOURCE>2.16.840.1.113883.6.96</ORDER_CODE_SOURCE>
+                <RESULT_ID><%= strReportID %></RESULT_ID>
+                <ACCESSION_NBR><%= strAccessionNbr %></ACCESSION_NBR>
+                <RESULT><%= strReportName %></RESULT>
+                <RESULT_CODE><%= input.get("OBR.4/CE.1") %></RESULT_CODE>
+                <RESULT_DATE><%= input.get("OBR.7/TS.1") %></RESULT_DATE>
+                <COMMENTS><%= engine.callRule("PathologyReportNote", input.get("RESULT"), data,true) %></COMMENTS>
+                <RESULT_CODE_SOURCE><%= data.get("source") %></RESULT_CODE_SOURCE>
+                <EVENT_TITLE><%= strReportTitle %></EVENT_TITLE>
+                <VALUE><%= engine.callRule("PathologyReport", input.get("RESULT"), data,true) %></VALUE>
+                <VALUE_DATA_TYPE><%= strReportTextType %></VALUE_DATA_TYPE>
+                <PERFORMER_ID><%= input.get("OBR.34/NDL.1/CNN.1") %></PERFORMER_ID>
+                <PERFORMER_ID_OID></PERFORMER_ID_OID>
+                <PERFORMER_FIRST><%= input.get("OBR.34/NDL.1/CNN.3") %></PERFORMER_FIRST>
+                <PERFORMER_MIDDLE><%= input.get("OBR.34/NDL.1/CNN.4") %></PERFORMER_MIDDLE>
+                <PERFORMER_LAST><%= input.get("OBR.34/NDL.1/CNN.2") %></PERFORMER_LAST>
+                <PERFORMER_SUFFIX><%= input.get("OBR.34/NDL.1/CNN.5") %></PERFORMER_SUFFIX>
+                <VERIFIER_ID><%= input.get("OBR.32/NDL.1/CNN.1") %></VERIFIER_ID>
+                <VERIFIER_ID_OID></VERIFIER_ID_OID>
+                <VERIFIER_FIRST><%= input.get("OBR.32/NDL.1/CNN.3") %></VERIFIER_FIRST>
+                <VERIFIER_MIDDLE><%= input.get("OBR.32/NDL.1/CNN.4") %></VERIFIER_MIDDLE>
+                <VERIFIER_LAST><%= input.get("OBR.32/NDL.1/CNN.2") %></VERIFIER_LAST>
+                <VERIFIER_SUFFIX><%= input.get("OBR.32/NDL.1/CNN.5") %></VERIFIER_SUFFIX>
+                <ORDERING_PROVIDER_ID><%= input.get("OBR.16/XCN.1") %></ORDERING_PROVIDER_ID>
+                <ORDERING_PROVIDER_ID_OID></ORDERING_PROVIDER_ID_OID>
+                <ORDERING_PROVIDER_FIRST><%= input.get("OBR.16/XCN.3") %></ORDERING_PROVIDER_FIRST>
+                <ORDERING_PROVIDER_MIDDLE><%= input.get("OBR.16/XCN.4") %></ORDERING_PROVIDER_MIDDLE>
+                <ORDERING_PROVIDER_LAST><%= input.get("OBR.16/XCN.2") %></ORDERING_PROVIDER_LAST>
+                <ORDERING_PROVIDER_SUFFIX><%= input.get("OBR.16/XCN.5") %></ORDERING_PROVIDER_SUFFIX>
+                <VERIFY_DATE><%= strVerifyDate %></VERIFY_DATE>
+                <PERFORM_DATE><%= strPerformDate %></PERFORM_DATE>
+                <PATIENT_TYPE><%= globalinput.get("PV1.18") %></PATIENT_TYPE>
+                <ENCOUNTER_NUM><%=data.get("encounter_alias").toString() %></ENCOUNTER_NUM>
+                <ENCOUNTER_ORIGIN><%=data.get("encounter_origin").toString() %></ENCOUNTER_ORIGIN>
+                <ENCOUNTER_LOCATION><%= globalinput.get("PV1.3/PL.4/HD.1") %></ENCOUNTER_LOCATION>
+                <STATUS><%= sStatus %></STATUS>
+            <% if(strReportType.equals("microbiology")){
+                %></micro><%
+            } else {%>
+                </result>
+            <%}
+        }
+    } %>
+#}
+
+[#
+   ID: ResultObservation
+#]
+
+Template {#
+    <%
+    import com.browsersoft.utils.DOMUtils;
+    int iSkip=0;
+    int iTempObxCnt=0;
+    int iCurrentObx=0;
+    for(int cnt=0; cnt< input.get("RESULT").size(); cnt++)
+    {
+        String sNTE="";
+        String sOBX5 = input.get("RESULT").get(cnt).get("OBX.5/CE.2");
+        if(sOBX5.equals("")){
+            sOBX5 = input.get("RESULT").get(cnt).get("OBX.5/CE.1");
+        }
+        String sOBX3 = input.get("RESULT").get(cnt).get("OBX.3/CE.2");
+        if(sOBX3.equals("")){
+            sOBX3 = input.get("RESULT").get(cnt).get("OBX.3/CE.1");
+        }
+
+        String sOBX4 = input.get("RESULT").get(cnt).get("OBX.4").toString();
+
+        sOBX3 = sOBX3.replace(" ", "-");
+
+        String strResultTypeComment = "0";
+
+        if(cnt+1 < input.get("RESULT").size()){
+            String sNextOBX3 = input.get("RESULT").get(cnt+1).get("OBX.3/CE.2");
+            if(sNextOBX3.equals("")){
+                sNextOBX3 = input.get("RESULT").get(cnt+1).get("OBX.3/CE.1");
+            }
+
+            sNextOBX3 = sNextOBX3.replace(" ", "-");
+
+            if(sOBX3.equals(sNextOBX3)){
+                iSkip=1;
+                if(iTempObxCnt>0){
+                    String sPrevOBX4 = input.get("RESULT").get(cnt-1).get("OBX.4").toString();
+                    if(!sOBX4.equals(sPrevOBX4)){
+                       strResultTypeComment = "1";
+                    }
+                }
+            } else if(iTempObxCnt>0){
+               String sPrevOBX4 = input.get("RESULT").get(cnt-1).get("OBX.4").toString();
+               if(!sOBX4.equals(sPrevOBX4)){
+                  strResultTypeComment = "1";
+               }
+           }
+        } else if(iTempObxCnt > 0) {
+            String sPrevOBX4 = input.get("RESULT").get(cnt-1).get("OBX.4").toString();
+                  //System.out.println("iTempObxCnt:"+iTempObxCnt);
+                  //System.out.println("sPrevOBX4:"+sPrevOBX4);
+            if(!sOBX4.equals(sPrevOBX4)){
+               strResultTypeComment = "1";
+            }
+        }
+
+        if(iSkip==0){
+            iCurrentObx = cnt - iTempObxCnt;
+            String temp_obx5 = input_vars.get("temp_obx5");
+            if(Integer.valueOf(strResultTypeComment) > 0){
+                String temp_nte = input_vars.get("temp_nte");
+                if(temp_nte==null){
+                    sNTE=sOBX5;
+                } else {
+                    sNTE=temp_nte + "<br/>" + sOBX5;
+                }
+                if(temp_obx5!=null){
+                    sOBX5 = temp_obx5;
+                }
+            } else {
+                if(temp_obx5!=null){
+                    sOBX5 = temp_obx5 + "<br/>" + sOBX5;
+                }
+            }
+
+            String sStatus = engine.callRule("StatusCodeTable", parentinput.get("OBR.25"), data);
+            String strOrderingPhys = "";
+            String strResultingPhys = "";
+            String strInterpretationCode = "";
+			String valueUnit = "";
+            String strValueDataType = "";
+
+            if ( !sOBX5.equals("") ) {
+
+                if ( input.get("RESULT").get(cnt).get("OBX.8").equals("") ) {
+                    strInterpretationCode="NA";
+                } else if ( input.get("OBX.8").equals("&quot;&quot;") ){
+                    strInterpretationCode= "";
+                } else {
+                    strInterpretationCode= input.get("RESULT").get(cnt).get("OBX.8");
+                }
+
+				if ( input.get("RESULT").get(iCurrentObx).get("OBX.6/CE.1").equals("") || input.get("RESULT").get(cnt).get("OBX.6/CE.1").equals("&quot;&quot;")) {
+                    valueUnit = "";
+                } else {
+                    valueUnit = input.get("RESULT").get(iCurrentObx).get("OBX.6/CE.1");
+                }
+
+                if ( input.get("RESULT").get(cnt).get("OBX.6/CE.1").equals("&quot;&quot;") || input.get("RESULT").get(cnt).get("OBX.6/CE.1").equals("") ) {
+                    strValueDataType="ST";
+                } else {
+                    strValueDataType= "PQ";
+                }
+
+                strResultDate = input.get("RESULT").get(cnt).get("OBX.14/TS.1");
+                if(strResultDate.equals("")) {
+                    strResultDate = parentinput.get("OBR.7/TS.1");
+                }
+
+                if(sNTE == null || sNTE.equals("")){
+                    sNTE=engine.callRule("PathologyReportNote", input.get("RESULT").get(cnt).get("NTE"), data,true);
+                }
+                %>
+
+               <lab_result>
+                    <SUB_TYPE>lab_result</SUB_TYPE>
+                    <SOURCE><%= data.get("source") %></SOURCE>
+                    <DOCUMENT_DATETIME><%= globalinput.get("MSH.7/TS.1") %></DOCUMENT_DATETIME>
+                    <DATA_TYPE>lab-results</DATA_TYPE>
+                    <SUB_DATA_TYPE>discrete</SUB_DATA_TYPE>
+                    <% if ( globalinput.get("MSH.4/HD.1").equals("EHS") ) { %>
+                        <RESULT_CODE><%= parentinput.get("OBR.4/CE.1") %></RESULT_CODE>
+                        <RESULT><%= parentinput.get("OBR.4/CE.2") %></RESULT>
+                        <RESULT_ID><%= parentinput.get("OBR.4/CE.1") %><%= input.get("OBR.4/CE.2") %></RESULT_ID>
+                    <% } else { %>
+                        <RESULT_CODE><%= input.get("RESULT").get(cnt).get("OBX.3/CE.1") %></RESULT_CODE>
+                        <RESULT><%= input.get("RESULT").get(cnt).get("OBX.3/CE.2") %></RESULT>
+                        <RESULT_ID><%= input.get("RESULT").get(cnt).get("OBX.3/CE.1") %><%= input.get("RESULT").get(cnt).get("OBX.3/CE.2") %></RESULT_ID>
+                    <% } %>
+                    <RESULT_CODE_SOURCE>2.16.840.1.113883.6.1</RESULT_CODE_SOURCE>
+                    <VALUE><%= sOBX5 %></VALUE>
+                    <VALUE_UNIT><%= valueUnit %></VALUE_UNIT>
+                    <VALUE_DATA_TYPE><%= strValueDataType %></VALUE_DATA_TYPE>
+                    <% if(input.get("RESULT").get(iCurrentObx).get("OBX.7/CRFR.2").equals("") && input.get("RESULT").get(iCurrentObx).get("OBX.7/CRFR.3").equals("")){ %>
+                        <LOW_VALUE><%= input.get("RESULT").get(iCurrentObx).get("OBX.7/CRFR.1") %></LOW_VALUE>
+                        <HIGH_VALUE></HIGH_VALUE>
+                    <% } else { %>
+                        <LOW_VALUE><%= input.get("RESULT").get(iCurrentObx).get("OBX.7/CRFR.2") %></LOW_VALUE>
+                        <HIGH_VALUE><%= input.get("RESULT").get(iCurrentObx).get("OBX.7/CRFR.3") %></HIGH_VALUE>
+                    <% } %>
+                    <INTERPRETATION><%= strInterpretationCode %></INTERPRETATION>
+                    <INTERPRETATION_CODE><%= strInterpretationCode %></INTERPRETATION_CODE>
+                    <RESULT_DATE><%= strResultDate %></RESULT_DATE>
+                    <STATUS><%= sStatus %></STATUS>
+                    <ORDER_NAME><%= parentinput.get("OBR.4/CE.2") %></ORDER_NAME>
+                    <ORDER_CODE><%= parentinput.get("OBR.4/CE.1") %></ORDER_CODE>
+                    <ORDER_CODE_SOURCE>2.16.840.1.113883.6.96</ORDER_CODE_SOURCE>
+                    <% if(parentinput.get("OBR.2/EI.1").equals("")) { %>
+                        <ORDER_ALIAS><%= parentinput.get("OBR.3/EI.1") %></ORDER_ALIAS>
+                    <% } else { %>
+                        <ORDER_ALIAS><%= parentinput.get("OBR.2/EI.1") %></ORDER_ALIAS>
+                    <% } %>
+                    <COMMENTS><%= DOMUtils.stringToEntity(sNTE) %></COMMENTS>
+                    <PERFORMER_ID><%= input.get("RESULT").get(cnt).get("OBX.16/XCN.1") %></PERFORMER_ID>
+                    <PERFORMER_ID_OID></PERFORMER_ID_OID>
+                    <PERFORMER_FIRST><%= input.get("RESULT").get(cnt).get("OBX.16/XCN.3") %></PERFORMER_FIRST>
+                    <PERFORMER_MIDDLE><%= input.get("RESULT").get(cnt).get("OBX.16/XCN.4") %></PERFORMER_MIDDLE>
+                    <PERFORMER_LAST><%= input.get("RESULT").get(cnt).get("OBX.16/XCN.2") %></PERFORMER_LAST>
+                    <PERFORMER_SUFFIX><%= input.get("RESULT").get(cnt).get("OBX.16/XCN.5") %></PERFORMER_SUFFIX>
+                    <VERIFIER_ID><%= parentinput.get("OBR.32/NDL.1/CNN.1") %></VERIFIER_ID>
+                    <VERIFIER_ID_OID></VERIFIER_ID_OID>
+                    <VERIFIER_FIRST><%= parentinput.get("OBR.32/NDL.1/CNN.3") %></VERIFIER_FIRST>
+                    <VERIFIER_MIDDLE><%= parentinput.get("OBR.32/NDL.1/CNN.4") %></VERIFIER_MIDDLE>
+                    <VERIFIER_LAST><%= parentinput.get("OBR.32/NDL.1/CNN.2") %></VERIFIER_LAST>
+                    <VERIFIER_SUFFIX><%= parentinput.get("OBR.32/NDL.1/CNN.5") %></VERIFIER_SUFFIX>
+                    <ORDERING_PROVIDER_ID><%= parentinput.get("OBR.16/XCN.1") %></ORDERING_PROVIDER_ID>
+                    <ORDERING_PROVIDER_ID_OID></ORDERING_PROVIDER_ID_OID>
+                    <ORDERING_PROVIDER_FIRST><%= parentinput.get("OBR.16/XCN.3") %></ORDERING_PROVIDER_FIRST>
+                    <ORDERING_PROVIDER_MIDDLE><%= parentinput.get("OBR.16/XCN.4") %></ORDERING_PROVIDER_MIDDLE>
+                    <ORDERING_PROVIDER_LAST><%= parentinput.get("OBR.16/XCN.2") %></ORDERING_PROVIDER_LAST>
+                    <ORDERING_PROVIDER_SUFFIX><%= parentinput.get("OBR.16/XCN.5") %></ORDERING_PROVIDER_SUFFIX>
+                    <ENCOUNTER_NUM><%=data.get("encounter_alias").toString() %></ENCOUNTER_NUM>
+                    <ENCOUNTER_ORIGIN><%=data.get("encounter_origin").toString() %></ENCOUNTER_ORIGIN>
+                </lab_result>
+
+                <%
+                    String temp = input_vars.get("processed_obr");
+                    //process order for result only one time
+                    if (temp==null || !temp.equals("1")) {
+                %>
+                  <lab_result>
+                        <SUB_TYPE>lab_result_order</SUB_TYPE>
+                        <SOURCE><%= data.get("source") %></SOURCE>
+                        <DOCUMENT_DATETIME><%= globalinput.get("MSH.7/TS.1") %></DOCUMENT_DATETIME>
+                        <% if ( globalinput.get("MSH.4/HD.1").equals("EHS") ) { %>
+                            <RESULT_CODE><%= parentinput.get("OBR.4/CE.1") %></RESULT_CODE>
+                            <RESULT><%= parentinput.get("OBR.4/CE.2") %></RESULT>
+                            <RESULT_ID><%= parentinput.get("OBR.4/CE.1") %><%= input.get("OBR.4/CE.2") %></RESULT_ID>
+                        <% } else { %>
+                            <RESULT_CODE><%= input.get("RESULT").get(cnt).get("OBX.3/CE.1") %></RESULT_CODE>
+                            <RESULT><%= input.get("RESULT").get(cnt).get("OBX.3/CE.2") %></RESULT>
+                            <RESULT_ID><%= input.get("RESULT").get(cnt).get("OBX.3/CE.1") %><%= input.get("RESULT").get(cnt).get("OBX.3/CE.2") %></RESULT_ID>
+                        <% } %>
+    
+                        <RESULT_CODE_SOURCE>2.16.840.1.113883.6.1</RESULT_CODE_SOURCE>
+                        <VALUE><%= sOBX5 %></VALUE>
+                        <VALUE_UNIT><%= input.get("RESULT").get(cnt).get("OBX.6/CE.1") %></VALUE_UNIT>
+                        <VALUE_DATA_TYPE><%= strValueDataType %></VALUE_DATA_TYPE>
+                        <LOW_VALUE><%= input.get("RESULT").get(cnt).get("OBX.7/CRFR.2") %></LOW_VALUE>
+                        <HIGH_VALUE><%= input.get("RESULT").get(cnt).get("OBX.7/CRFR.3") %></HIGH_VALUE>
+                        <INTERPRETATION><%= strInterpretationCode %></INTERPRETATION>
+                        <INTERPRETATION_CODE><%= strInterpretationCode %></INTERPRETATION_CODE>
+                        <RESULT_DATE><%= strResultDate %></RESULT_DATE>
+                        <STATUS><%= sStatus %></STATUS>
+                        <ORDER_NAME><%= parentinput.get("OBR.4/CE.2") %></ORDER_NAME>
+                        <ORDER_CODE><%= parentinput.get("OBR.4/CE.1") %></ORDER_CODE>
+                        <ORDER_CODE_SOURCE>2.16.840.1.113883.6.96</ORDER_CODE_SOURCE>
+                        <% if(parentinput.get("OBR.2/EI.1").equals("")) { %>
+                            <ORDER_ALIAS><%= parentinput.get("OBR.3/EI.1") %></ORDER_ALIAS>
+                        <% } else { %>
+                            <ORDER_ALIAS><%= parentinput.get("OBR.2/EI.1") %></ORDER_ALIAS>
+                        <% } %>
+                        <COMMENTS><%= DOMUtils.stringToEntity(sNTE) %></COMMENTS>
+                        <PERFORMER_ID><%= input.get("RESULT").get(cnt).get("OBX.16/XCN.1") %></PERFORMER_ID>
+                        <PERFORMER_ID_OID></PERFORMER_ID_OID>
+                        <PERFORMER_FIRST><%= input.get("RESULT").get(cnt).get("OBX.16/XCN.3") %></PERFORMER_FIRST>
+                        <PERFORMER_MIDDLE><%= input.get("RESULT").get(cnt).get("OBX.16/XCN.4") %></PERFORMER_MIDDLE>
+                        <PERFORMER_LAST><%= input.get("RESULT").get(cnt).get("OBX.16/XCN.2") %></PERFORMER_LAST>
+                        <PERFORMER_SUFFIX><%= input.get("RESULT").get(cnt).get("OBX.16/XCN.5") %></PERFORMER_SUFFIX>
+                        <VERIFIER_ID><%= parentinput.get("OBR.32/NDL.1/CNN.1") %></VERIFIER_ID>
+                        <VERIFIER_ID_OID></VERIFIER_ID_OID>
+                        <VERIFIER_FIRST><%= parentinput.get("OBR.32/NDL.1/CNN.3") %></VERIFIER_FIRST>
+                        <VERIFIER_MIDDLE><%= parentinput.get("OBR.32/NDL.1/CNN.4") %></VERIFIER_MIDDLE>
+                        <VERIFIER_LAST><%= parentinput.get("OBR.32/NDL.1/CNN.2") %></VERIFIER_LAST>
+                        <VERIFIER_SUFFIX><%= parentinput.get("OBR.32/NDL.1/CNN.5") %></VERIFIER_SUFFIX>
+                        <ORDERING_PROVIDER_ID><%= parentinput.get("OBR.16/XCN.1") %></ORDERING_PROVIDER_ID>
+                        <ORDERING_PROVIDER_ID_OID></ORDERING_PROVIDER_ID_OID>
+                        <ORDERING_PROVIDER_FIRST><%= parentinput.get("OBR.16/XCN.3") %></ORDERING_PROVIDER_FIRST>
+                        <ORDERING_PROVIDER_MIDDLE><%= parentinput.get("OBR.16/XCN.4") %></ORDERING_PROVIDER_MIDDLE>
+                        <ORDERING_PROVIDER_LAST><%= parentinput.get("OBR.16/XCN.2") %></ORDERING_PROVIDER_LAST>
+                        <ORDERING_PROVIDER_SUFFIX><%= parentinput.get("OBR.16/XCN.5") %></ORDERING_PROVIDER_SUFFIX>
+                        <ENCOUNTER_NUM><%=data.get("encounter_alias").toString() %></ENCOUNTER_NUM>
+                        <ENCOUNTER_ORIGIN><%=data.get("encounter_origin").toString() %></ENCOUNTER_ORIGIN>
+                    </lab_result>
+            <%
+                    input_vars.put("processed_obr","1");
+                }
+            }
+
+            input_vars.put("temp_nte",null);
+            input_vars.put("temp_obx5",null);
+            iTempObxCnt=0
+        } else {
+            iTempObxCnt=iTempObxCnt+1;
+            iSkip=0;
+            if(Integer.valueOf(strResultTypeComment) > 0){
+                String temp_nte = input_vars.get("temp_nte");
+                if(temp_nte==null){
+                    input_vars.put("temp_nte",sOBX5);
+                } else {
+                    input_vars.put("temp_nte",temp_nte + "<br/>" + sOBX5);
+                }
+            } else {
+                String temp_obx5 = input_vars.get("temp_obx5");
+                if(temp_obx5==null){
+                    input_vars.put("temp_obx5",sOBX5);
+                } else {
+                    input_vars.put("temp_obx5",temp_obx5 + "<br/>" + sOBX5);
+                }
+            }
+        }
+    }
+    %>
+#}
+
+
+[#
+   ID: PathologyReportOBX5
+#]
+
+Template {#<%
+String sOBX5="";
+if(index>0 && !input.get("CE.3").equals("RTF")){
+%>
+<%}
+if(input.get("CE.3").equals("RTF") || input.get("CE.3").equals("XHTML")){ // Modification: 0001
+    sOBX5=input.get("CE.5");
+} else {
+    if(input.get("CE.2").toString().equals("")){
+        sOBX5=input.get("CE.1");
+    } else {
+        sOBX5=input.get("CE.2");
+    }
+}
+%><%= sOBX5 %>#}
+
+
+[#
+   ID: PathologyReport
+#]
+
+Template {#<%
+import com.browsersoft.adapterkit.rtf2html.Rtf2HtmlConvertor;
+import com.browsersoft.utils.DOMUtils;
+/* Begin Modification: 0001 */
+import com.browsersoft.utils.Base64Coder;
+import org.apache.commons.codec.binary.Base64;
+/* End Modification: 0001 */
+String sOBX5 = "";
+if (!input.get("OBX.2").toString().equals("RP")) {
+    sOBX5 = engine.callRule("PathologyReportOBX5", input.get("OBX.5R"), data,true);
+    sOBX5=sOBX5.replaceAll(/\u2019/, "'");
+    sOBX5=sOBX5.replaceAll(/\u000c/, "");
+    if( input.get("OBX.5/CE.3").equals("RTF") || input_vars.get("obx_data_type").equals("RTF")) {
+        sOBX5= Rtf2HtmlConvertor.rtf2html(sOBX5);
+    }
+	/* Begin Modification: 0001 */
+	else if(input.get("OBX.5/CE.3").equals("XHTML") || input_vars.get("obx_data_type").equals("XHTML")){
+		System.out.println("XHTML");
+    	sOBX5 = sOBX5.replace("\\.br\\","");
+    	sOBX5 = sOBX5.replace("\n","");
+    	sOBX5 = sOBX5.trim();
+    	sOBX5 = new String(Base64.decodeBase64(sOBX5));
+    	sOBX5=sOBX5.replaceAll(/\uFFFD/, "");
+    	sOBX5=sOBX5.replaceAll(/\ufffd/, "");
+    }
+	/* End Modification: 0001 */
+	else {
+        sOBX5 = sOBX5.replaceAll("\n", "<br/>");
+    }
+
+	String temp = input_vars.get("obx_3");
+    if (temp==null) {
+        temp = input.get("OBX.3/CE.1");
+        input_vars.put("obx_3",temp);
+        if(engine.callRule("MapFirstResultToReport", data.get("result_alias_group").toString() + input_vars.get("report_type"), data)=="1"){
+            sOBX5= "<b>"+ temp + "</b><br/>" + sOBX5;
+        }
+    } else if (!temp.equals(input.get("OBX.3/CE.1").toString()) ) {
+        temp = input.get("OBX.3/CE.1");
+        sOBX5= "<br/>"+ "<br/><b>"+ temp + "</b><br/>" + sOBX5;
+        input_vars.put("obx_3",temp);
+    }
+
+    sOBX5 = sOBX5 + "<br/>";
+    } else {
+        sOBX5= input.get("OBX.5/CE.2").toString() + "^" +input.get("OBX.5/CE.1").toString();
+    }
+    %><%= DOMUtils.stringToEntity(sOBX5) %>
+#}
+
+
+[#
+   ID: PathologyReportNote
+#]
+
+Template {#<%
+    String sNTE3 = input.get("NTE.3");
+    sNTE3 = sNTE3.replaceAll("\n", "<br/>");
+    if ( input.get("NTE.3").equals("") ) { %>
+    <% } else {
+    %><%= sNTE3 %><%
+	 }
+%>#}
+
+
+[#
+   Id: VitalSignsProcessing
+#]
+
+Template {#
+<%
+//System.out.println("in VitalSignsProcessing ="+input.get("RESULT").size());
+if(input.get("RESULT").size()) {
+    engine.callRule("VitalsObservation", input.get("RESULT"), data);
+} %>
+#}
+
+
+
+[#
+   ID: VitalsObservation
+#]
+
+Template {#
+    <%
+//System.out.println("in VitalsObservation");
+    String sOBX3 = input.get("OBX.3/CE.1");
+    sOBX3 = sOBX3.replace(" ", "-");
+
+    String sOBX5 = input.get("OBX.5/CE.1");
+    String sStatus = engine.callRule("StatusCodeTable", parentinput.get("OBR.25"), data);
+    String strInterpretationCode = "";
+    if ( input.get("OBX.5/CE.1").equals("") ) { %>
+    <% } else {
+
+        if ( input.get("OBX.8").equals("") ) {
+            strInterpretationCode="NA";
+        } else if ( input.get("OBX.8").equals("&quot;&quot;") ){
+            strInterpretationCode= "";
+        } else {
+            strInterpretationCode= input.get("OBX.8");
+        } %>
+
+       <vital>
+            <SOURCE><%= data.get("source") %></SOURCE>
+            <DOCUMENT_DATETIME><%= globalinput.get("MSH.7/TS.1") %></DOCUMENT_DATETIME>
+            <MEASUREMENT_ID/>
+            <MEASUREMENT_CODE><%= sOBX3 %></MEASUREMENT_CODE>
+            <MEASUREMENT_NAME><%= input.get("OBX.3/CE.2") %></MEASUREMENT_NAME>
+            <MEASUREMENT_CODE_SOURCE>2.16.840.1.113883.6.1</MEASUREMENT_CODE_SOURCE>
+
+            <VALUE><%= input.get("OBX.5/CE.1") %></VALUE>
+            <VALUE_UNIT><%= input.get("OBX.6/CE.1") %></VALUE_UNIT>
+            <VALUE_DATA_TYPE>PQ</VALUE_DATA_TYPE>
+            <LOW_VALUE><%= input.get("OBX.7/CRFR.2") %></LOW_VALUE>
+            <HIGH_VALUE><%= input.get("OBX.7/CRFR.3") %></HIGH_VALUE>
+            <INTERPRETATION><%= strInterpretationCode %></INTERPRETATION>
+            <INTERPRETATION_CODE><%= strInterpretationCode %></INTERPRETATION_CODE>
+            <OBSERVATION_DATE><%= input.get("OBX.14/TS.1") %></OBSERVATION_DATE>
+            <STATUS><%= sStatus %></STATUS>
+            <ORDER_NAME><%= parentinput.get("OBR.4/CE.2") %></ORDER_NAME>
+            <ORDER_CODE><%= parentinput.get("OBR.4/CE.1") %></ORDER_CODE>
+            <ORDER_CODE_SOURCE>2.16.840.1.113883.6.96</ORDER_CODE_SOURCE>
+            <% if(parentinput.get("OBR.2/EI.1").equals("")) { %>
+                <ORDER_ALIAS><%= parentinput.get("OBR.3/EI.1") %></ORDER_ALIAS>
+            <% } else { %>
+                <ORDER_ALIAS><%= parentinput.get("OBR.2/EI.1") %></ORDER_ALIAS>
+            <% } %>
+            <ROUTE/>
+            <SITE/>
+            <COMMENTS><%= input.get("NTE.3") %></COMMENTS>
+            <RESULTED_BY_ID><%= input.get("OBX.16/XCN.1") %></RESULTED_BY_ID>
+            <RESULTED_BY_ID_OID></RESULTED_BY_ID_OID>
+            <RESULTED_BY_FIRST><%= input.get("OBX.16/XCN.3") %></RESULTED_BY_FIRST>
+            <RESULTED_BY_MIDDLE><%= input.get("OBX.16/XCN.4") %></RESULTED_BY_MIDDLE>
+            <RESULTED_BY_LAST><%= input.get("OBX.16/XCN.2") %></RESULTED_BY_LAST>
+            <RESULTED_BY_SUFFIX><%= input.get("OBX.16/XCN.5") %></RESULTED_BY_SUFFIX>
+            <VERIFIER_ID><%= parentinput.get("OBR.32/NDL.1/CNN.1") %></VERIFIER_ID>
+            <VERIFIER_ID_OID></VERIFIER_ID_OID>
+            <VERIFIER_FIRST><%= parentinput.get("OBR.32/NDL.1/CNN.3") %></VERIFIER_FIRST>
+            <VERIFIER_MIDDLE><%= parentinput.get("OBR.32/NDL.1/CNN.4") %></VERIFIER_MIDDLE>
+            <VERIFIER_LAST><%= parentinput.get("OBR.32/NDL.1/CNN.2") %></VERIFIER_LAST>
+            <VERIFIER_SUFFIX><%= parentinput.get("OBR.32/NDL.1/CNN.5") %></VERIFIER_SUFFIX>
+            <ORDERING_PROVIDER_ID><%= parentinput.get("OBR.16/XCN.1") %></ORDERING_PROVIDER_ID>
+            <ORDERING_PROVIDER_ID_OID></ORDERING_PROVIDER_ID_OID>
+            <ORDERING_PROVIDER_FIRST><%= parentinput.get("OBR.16/XCN.3") %></ORDERING_PROVIDER_FIRST>
+            <ORDERING_PROVIDER_MIDDLE><%= parentinput.get("OBR.16/XCN.4") %></ORDERING_PROVIDER_MIDDLE>
+            <ORDERING_PROVIDER_LAST><%= parentinput.get("OBR.16/XCN.2") %></ORDERING_PROVIDER_LAST>
+            <ORDERING_PROVIDER_SUFFIX><%= parentinput.get("OBR.16/XCN.5") %></ORDERING_PROVIDER_SUFFIX>
+            <ENCOUNTER_NUM><%=data.get("encounter_alias").toString() %></ENCOUNTER_NUM>
+            <ENCOUNTER_ORIGIN><%=data.get("encounter_origin").toString() %></ENCOUNTER_ORIGIN>
+        </vital>
+    <% } %>
+#}
+
+[#
+ID: MicroResultObservationProcessing
+#]
+
+Template {#<%
+int obr_count = input_vars.get("obr_count");
+if (obr_count==null) {obr_count = 0}
+input_vars.put("obr_size", parentinput.get("Order").size());
+input_vars.put("obr_count", obr_count);
+String sOBR24 = input.get("OBR.24");
+sOBR24 = sOBR24.replace(" ", "-");
+
+if(engine.callRule("MicroSingleOBR", data.get("patientAA").toString() + sOBR24, data)=="1" || engine.callRule("MicroSingleOBR", data.get("result_alias_group").toString() + sOBR24, data)=="1"){
+    input_vars.put("micro_single_obr", 1);
+}
+
+if (obr_count == 0) {
+
+    String strResultID = "";
+    if(input.get("OBR.2/EI.1").equals("")) {
+        strResultID=input.get("OBR.3/EI.1");
+    } else {
+        strResultID=input.get("OBR.2/EI.1");
+    }
+
+    String strVerifyLocation = engine.callRule("VerifyDateLocation", data.get("result_alias_group").toString() + sOBR24, data);
+    if(strVerifyLocation.equals("")) {
+        strVerifyLocation = engine.callRule("VerifyDateLocation", data.get("patientAA").toString() + sOBR24, data);
+    }
+    String strVerifyDate = "";
+    if(strVerifyLocation.equals("OBX14") && input.get("RESULT").size()) {
+        strVerifyDate = input.get("RESULT").get(0).get("OBX.14/TS.1").toString();
+    } else {
+        strVerifyDate = input.get("OBR.22/TS.1").toString();
+    }
+
+    String strPerformLocation = engine.callRule("PerformDateLocation", data.get("result_alias_group").toString() + sOBR24, data);
+    if(strPerformLocation.equals("")) {
+        strPerformLocation = engine.callRule("PerformDateLocation", data.get("patientAA").toString() + sOBR24, data);
+    }
+    String strPerformDate = "";
+    if(strPerformLocation.equals("OBR7")) {
+        strPerformDate = input.get("OBR.7/TS.1").toString();
+    } else {
+        strPerformDate = input.get("OBR.22/TS.1").toString();
+    }
+
+    String strReportTitle = input.get("OBR.4/CE.5");
+    if(strReportTitle.equals("")) {
+        strReportTitle=input.get("OBR.4/CE.2");
+    }
+
+    String sPV13 = globalinput.get("PV1.3/PL.4/HD.1");
+    sPV13 = sPV13.replace(" ", "-");
+
+    String sPV118 = globalinput.get("PV1.18");
+    sPV118 = sPV118.replace(" ", "-");
+
+    String strPointOfCare = "";
+    String strBuilding = "";
+
+    String strFacility = engine.callRule("ORULocationTable",data.get("encounter_group").toString() + sPV13, data);
+
+    if(strFacility.equals("")) {
+    	strFacility = engine.callRule("ORULocationTable",data.get("patientAA").toString() + globalinput.get("PV1.3/PL.4/HD.1").toString(), data);
+    } else {
+        strPointOfCare= globalinput.get("PV1.3/PL.1");
+        strFacility = engine.callRule("ORULocationTable",data.get("encounter_group").toString() + globalinput.get("PV1.3/PL.4/HD.1").toString(), data);
+        if(strFacility.equals("")) {
+            strFacility = engine.callRule("ORULocationTable", globalinput.get("PV1.3/PL.4/HD.1").toString(), data);
+            if(strFacility.equals("")) {
+                strFacility = globalinput.get("PV1.3/PL.4/HD.1");
+            }
+        }
+
+        strBuilding = engine.callRule("ORULocationTable",data.get("encounter_group").toString() + globalinput.get("PV1.3/PL.7").toString(), data);
+
+        if(strBuilding.equals("")) {
+        	strBuilding = globalinput.get("PV1.3/PL.7");
+        }
+    }
+
+    String strEncounterType = engine.callRule("ORUEncounterTypeTable",data.get("encounter_group").toString() + globalinput.get("PV1.18").toString(), data);
+
+    if(strEncounterType.equals("")) {
+        strEncounterType = engine.callRule("ORUEncounterTypeTable", data.get("encounter_group").toString() + globalinput.get("PV1.2").toString(), data);
+    }
+
+    if(strEncounterType.equals("")) {
+    	strEncounterType = engine.callRule("ORUEncounterTypeTable",data.get("patientAA").toString() + globalinput.get("PV1.18").toString(), data);
+    }
+
+    if(strEncounterType.equals("")) {
+        strEncounterType = engine.callRule("ORUEncounterTypeTable", data.get("patientAA").toString() + globalinput.get("PV1.2").toString(), data);
+    }
+
+    if(strEncounterType.equals("")) {
+        strEncounterType = globalinput.get("PV1.18");
+    }
+
+    if(strEncounterType.equals("")) {
+        strEncounterType = globalinput.get("PV1.2");
+    }
+
+    String strValue="";
+    if(input_vars.get("micro_single_obr")== 1){
+        strValue=engine.callRule("MicroResultValueSingleOBR", parentinput.get("Order"), data, true);
+    } else {
+        strValue=engine.callRule("MicroResultValue", input.get("RESULT"), data, true);
+    }
+%>
+    <micro>
+        <SOURCE><%= data.get("source") %></SOURCE>
+        <DOCUMENT_DATETIME><%= globalinput.get("MSH.7/TS.1") %></DOCUMENT_DATETIME>
+        <DATA_TYPE>microbiology</DATA_TYPE>
+        <SUB_DATA_TYPE>discrete</SUB_DATA_TYPE>
+        <RESULT_CODE><%= input.get("OBR.4/CE.1") %></RESULT_CODE>
+        <RESULT><%= input.get("OBR.4/CE.2") %></RESULT>
+        <RESULT_ID><%= strResultID %></RESULT_ID>
+        <RESULT_CODE_SOURCE>2.16.840.1.113883.6.1</RESULT_CODE_SOURCE>
+        <EVENT_TITLE><%= strReportTitle %></EVENT_TITLE>
+        <VALUE><%= strValue %></VALUE>
+        <VALUE_UNIT></VALUE_UNIT>
+        <VALUE_DATA_TYPE>ST</VALUE_DATA_TYPE>
+        <LOW_VALUE></LOW_VALUE>
+        <HIGH_VALUE></HIGH_VALUE>
+        <INTERPRETATION></INTERPRETATION>
+        <INTERPRETATION_CODE></INTERPRETATION_CODE>
+        <SPECIMEN_SOURCE><%= input.get("OBR.15/SPS.1/CWE.2") %></SPECIMEN_SOURCE>
+        <SPECIMEN_SITE><%= input.get("OBR.15/SPS.4/CWE.2") %></SPECIMEN_SITE>
+        <RESULT_DATE><%= input.get("OBR.7/TS.1") %></RESULT_DATE>
+        <STATUS><%= engine.callRule("StatusCodeTable", input.get("OBR.25"), data) %></STATUS>
+        <ORDER_NAME><%= input.get("OBR.4/CE.2") %></ORDER_NAME>
+        <ORDER_CODE><%= input.get("OBR.4/CE.1") %></ORDER_CODE>
+        <ORDER_CODE_SOURCE>2.16.840.1.113883.6.96</ORDER_CODE_SOURCE>
+        <% if(input.get("OBR.2/EI.1").equals("")) { %>
+            <ORDER_ALIAS><%= input.get("OBR.3/EI.1") %></ORDER_ALIAS>
+        <% } else { %>
+            <ORDER_ALIAS><%= input.get("OBR.2/EI.1") %></ORDER_ALIAS>
+        <% } %>
+        <COMMENTS><%= input.get("NTE.3") %></COMMENTS>
+        <PERFORMER_ID><%= input.get("OBX.16/XCN.1") %></PERFORMER_ID>
+        <PERFORMER_ID_OID></PERFORMER_ID_OID>
+        <PERFORMER_FIRST><%= input.get("OBX.16/XCN.3") %></PERFORMER_FIRST>
+        <PERFORMER_MIDDLE><%= input.get("OBX.16/XCN.4") %></PERFORMER_MIDDLE>
+        <PERFORMER_LAST><%= input.get("OBX.16/XCN.2") %></PERFORMER_LAST>
+        <PERFORMER_SUFFIX><%= input.get("OBX.16/XCN.5") %></PERFORMER_SUFFIX>
+        <VERIFIER_ID><%= input.get("OBR.32/NDL.1/CNN.1") %></VERIFIER_ID>
+        <VERIFIER_ID_OID></VERIFIER_ID_OID>
+        <VERIFIER_FIRST><%= input.get("OBR.32/NDL.1/CNN.3") %></VERIFIER_FIRST>
+        <VERIFIER_MIDDLE><%= input.get("OBR.32/NDL.1/CNN.4") %></VERIFIER_MIDDLE>
+        <VERIFIER_LAST><%= input.get("OBR.32/NDL.1/CNN.2") %></VERIFIER_LAST>
+        <VERIFIER_SUFFIX><%= input.get("OBR.32/NDL.1/CNN.5") %></VERIFIER_SUFFIX>
+        <ORDERING_PROVIDER_ID><%= input.get("OBR.16/XCN.1") %></ORDERING_PROVIDER_ID>
+        <ORDERING_PROVIDER_ID_OID></ORDERING_PROVIDER_ID_OID>
+        <ORDERING_PROVIDER_FIRST><%= input.get("OBR.16/XCN.3") %></ORDERING_PROVIDER_FIRST>
+        <ORDERING_PROVIDER_MIDDLE><%= input.get("OBR.16/XCN.4") %></ORDERING_PROVIDER_MIDDLE>
+        <ORDERING_PROVIDER_LAST><%= input.get("OBR.16/XCN.2") %></ORDERING_PROVIDER_LAST>
+        <ORDERING_PROVIDER_SUFFIX><%= input.get("OBR.16/XCN.5") %></ORDERING_PROVIDER_SUFFIX>
+        <VERIFY_DATE><%= strVerifyDate%></VERIFY_DATE>
+        <PERFORM_DATE><%= strPerformDate %></PERFORM_DATE>
+        <PATIENT_TYPE><%=strEncounterType %></PATIENT_TYPE>
+        <ENCOUNTER_NUM><%=data.get("encounter_alias").toString() %></ENCOUNTER_NUM>
+        <ENCOUNTER_ORIGIN><%=data.get("encounter_origin").toString() %></ENCOUNTER_ORIGIN>
+        <ENCOUNTER_LOCATION><%=strFacility %></ENCOUNTER_LOCATION>
+
+<% }
+
+if (obr_count > 0 && input_vars.get("micro_single_obr")== null) {
+%>
+        <SUSCEPTIBLITIES>
+            <SUSCEPTIBLITY>
+                <TEST_METHOD><%= input.get("OBR.4/CE.2") %></TEST_METHOD>
+                <ORGANISM><%= input.get("OBR.26/PRL.3/TX.0") %></ORGANISM>
+                <%= engine.callRule("MicroResultTestHeader", input.get("RESULT"), data,true)%>
+                <%= engine.callRule("MicroResultSusceptiblity", input.get("RESULT"), data,true)%>
+            </SUSCEPTIBLITY>
+        </SUSCEPTIBLITIES>
+
+<%
+} else if(input_vars.get("micro_single_obr")== 1){
+%>
+    <%= engine.callRule("MicroResultSusceptiblitySingleOBR", parentinput.get("Order"), data,true)%>
+<%
+}
+
+obr_count++;
+input_vars.put("obr_count",obr_count);
+if (obr_count == input_vars.get("obr_size")) {
+%>
+    </micro>
+<% } %>
+#}
+
+
+[#
+   ID: MicroResultValue
+#]
+
+Template {#<%
+    String sOBX5 = "";
+    if(!input.get("OBX.5/CE.2").toString().equals("")) {
+        sOBX5 = input.get("OBX.5/CE.2").toString().replaceAll(/\u2019/, "'");
+    } else {
+        sOBX5 = input.get("OBX.5/CE.1").toString().replaceAll(/\u2019/, "'");
+    }
+    if(sOBX5.equals("") && input.get("OBX.5/CE.3").equals("RTF"))
+        sOBX5=input.get("OBX.5/CE.5");
+    sOBX5 = sOBX5.replaceAll("\n", "<br/>");
+
+    String temp = input.get("OBX.3/CE.2");
+    if(temp.equals("")){
+        temp = input.get("OBX.3/CE.1");
+    }
+    sOBX5= "<br/><br/><b>"+ temp + ":</b><br/>" + sOBX5 + "<br/>";
+
+    if(input_vars.get("micro_single_obr")== 1 && temp.equals("ORGANISM")) {
+        input_vars.put("stop_obx_processing",1)
+    }
+
+    if(input_vars.get("stop_obx_processing")!= 1) {
+    %><%= sOBX5 %><%}
+%>#}
+
+
+[#
+   ID: MicroResultValueSingleOBR
+#]
+
+Template {#<%
+    import com.browsersoft.utils.DOMUtils;
+    String sOBX5 = "";
+        String tempOBX5 = "";
+        for(int cnt=0; cnt< input.get("RESULT").size(); cnt++)
+        {
+            String temp_obx3= input.get("RESULT").get(cnt).get("OBX.3/CE.2").toString()
+            if(temp_obx3.equals("")){
+                temp_obx3= input.get("RESULT").get(cnt).get("OBX.3/CE.1").toString()
+            }
+            String temp_obx4= input.get("RESULT").get(cnt).get("OBX.4").toString()
+            if(temp_obx4.length() > 0) {
+                temp_obx4=temp_obx4.charAt(0);
+            }
+
+            if(temp_obx3.equals("ORGANISM")) {
+                cnt= input.get("RESULT").size(); //done processing
+            } else {
+
+                String next_obx3 = "";
+                String next_obx4 = "";
+                if(cnt+1 < input.get("RESULT").size()){
+                    next_obx3 = input.get("RESULT").get(cnt+1).get("OBX.3/CE.2").toString();
+                    if(temp_obx3.equals("")){
+                        next_obx3= input.get("RESULT").get(cnt+1).get("OBX.3/CE.1").toString();
+                    }
+                    next_obx4 = input.get("RESULT").get(cnt+1).get("OBX.4").toString();
+                    if(next_obx4.length() > 0) {
+                        next_obx4=next_obx4.charAt(0);
+                    }
+                }
+
+                if (!temp_obx3.equals(next_obx3)) {
+                    if(!tempOBX5.equals("")) {
+                        sOBX5 = tempOBX5;
+                    }
+                    if(!input.get("RESULT").get(cnt).get("OBX.5/CE.2").toString().equals("")) {
+                        sOBX5 = sOBX5 + input.get("RESULT").get(cnt).get("OBX.5/CE.2").toString().replaceAll(/\u2019/, "'");
+                    } else {
+                        sOBX5 = sOBX5 + input.get("RESULT").get(cnt).get("OBX.5/CE.1").toString().replaceAll(/\u2019/, "'");
+                    }
+                    if(sOBX5.equals("") && input.get("RESULT").get(cnt).get("OBX.5/CE.3").equals("RTF"))
+                        sOBX5= sOBX5 + input.get("RESULT").get(cnt).get("OBX.5/CE.5");
+                    sOBX5 = sOBX5.replaceAll("\n", "<br/>");
+
+                    sOBX5= "<br/><br/><b>"+ temp_obx3 + ":</b><br/>" + sOBX5 + "<br/>";
+
+                    String strPerformLocation = engine.callRule("PerformLocation", data.get("result_alias_group").toString() + input.get("OBR.24").toString(), data);
+                    if(strPerformLocation.equals("")) {
+                        strPerformLocation = engine.callRule("PerformLocation", data.get("patientAA").toString() + input.get("OBR.24").toString(), data);
+                    }
+                    if( !input.get("RESULT").get(cnt).get("OBX.16/XCN.1").toString().equals("") && strPerformLocation.equals("OBX16")) {
+                        sOBX5= sOBX5 + input.get("RESULT").get(cnt).get("OBX.16/XCN.1").toString() + "<br/>";
+                    }
+
+                    %><%= DOMUtils.stringToEntity(sOBX5) %><%
+                    tempOBX5="";
+                    sOBX5="";
+                } else if (temp_obx3.equals(next_obx3) && !temp_obx4.equals(next_obx4)){
+                    if(!tempOBX5.equals("")) {
+                        tempOBX5 = tempOBX5;
+                    }
+                    if(!input.get("RESULT").get(cnt).get("OBX.5/CE.2").toString().equals("")) {
+                        tempOBX5 = tempOBX5 + input.get("RESULT").get(cnt).get("OBX.5/CE.2").toString().replaceAll(/\u2019/, "'");
+                    } else {
+                        tempOBX5 = tempOBX5 + input.get("RESULT").get(cnt).get("OBX.5/CE.1").toString().replaceAll(/\u2019/, "'");
+                    }
+                    if(tempOBX5.equals("") && input.get("RESULT").get(cnt).get("OBX.5/CE.3").equals("RTF"))
+                        tempOBX5= tempOBX5 + input.get("RESULT").get(cnt).get("OBX.5/CE.5");
+                    tempOBX5 = tempOBX5.replaceAll("\n", "<br/>");
+                    tempOBX5 = tempOBX5 + "<br/>";
+
+                }   else {
+                    if(!input.get("RESULT").get(cnt).get("OBX.5/CE.2").toString().equals("")) {
+                        tempOBX5 = tempOBX5 + input.get("RESULT").get(cnt).get("OBX.5/CE.2").toString().replaceAll(/\u2019/, "'");
+                    } else {
+                        tempOBX5 = tempOBX5 + input.get("RESULT").get(cnt).get("OBX.5/CE.1").toString().replaceAll(/\u2019/, "'");
+                    }
+                    if(tempOBX5.equals("") && input.get("RESULT").get(cnt).get("OBX.5/CE.3").equals("RTF"))
+                        tempOBX5=input.get("RESULT").get(cnt).get("OBX.5/CE.5");
+                    tempOBX5 = tempOBX5.replaceAll("\n", "<br/>") + " ";
+                }
+
+            }
+        }
+%>#}
+
+
+
+[#
+ID: MicroResultSusceptiblity
+#]
+
+Template {#
+        <% if(input.get("OBX.2").toString().equals("NM")) { %>
+        <ANTIBIOTIC_NAME><%= input.get("OBX.3/CE.2") %></ANTIBIOTIC_NAME>
+        <ANTIBIOTIC_RESULT><%= input.get("OBX.5/CE.1") %></ANTIBIOTIC_RESULT>
+        <ANTIBIOTIC_INTERP><%= input.get("OBX.8") %></ANTIBIOTIC_INTERP>
+        <ANTIBIOTIC_NOTE><%= input.get("NTE.3") %></ANTIBIOTIC_NOTE>
+        <% } %>
+#}
+
+[#
+ID: MicroResultSusceptiblitySingleOBR
+#]
+
+Template {#<%
+        boolean processObx=false;
+        String tempName = "";
+        String tempResult = "";
+        String tempInterp = "";
+        String tempNote = "";
+        String strOBX2 = "";
+        String tempTestMethod = "";
+        String tempTestDilHeader = "";
+        String tempTestInterpHeader = "";
+        String tempOrganism = "";
+        for(int cnt=0; cnt< input.get("RESULT").size(); cnt++)
+        {
+            //System.out.println(input.get("RESULT").get(cnt).get("OBX.3/CE.2").toString());
+            String temp_obx3= input.get("RESULT").get(cnt).get("OBX.3/CE.2").toString()
+            if(temp_obx3.equals("")){
+                temp_obx3= input.get("RESULT").get(cnt).get("OBX.3/CE.1").toString()
+            }
+
+
+            if(processObx==true && !temp_obx3.equals("ORGANISM")) {
+
+                String next_obx3 = "";
+                if(cnt+1 < input.get("RESULT").size()){
+                    next_obx3 = input.get("RESULT").get(cnt+1).get("OBX.3/CE.2").toString()
+                    if(temp_obx3.equals("")){
+                        next_obx3= input.get("RESULT").get(cnt+1).get("OBX.3/CE.1").toString()
+                    }
+                }
+
+                strOBX2= input.get("RESULT").get(cnt).get("OBX.2").toString();
+                if(strOBX2.equals("NM") || strOBX2.equals("ST")) {
+                    tempName = temp_obx3;
+                    tempResult = input.get("RESULT").get(cnt).get("OBX.5/CE.1");;
+                    tempInterp = input.get("RESULT").get(cnt).get("OBX.8");;
+                } else if (strOBX2.equals("CE")) {
+                    tempName = temp_obx3;
+                    if(tempResult.equals("")) {
+                        tempResult = input.get("RESULT").get(cnt).get("OBX.5/CE.2");
+                    }
+                    tempInterp = input.get("RESULT").get(cnt).get("OBX.8");
+                } else if (strOBX2.equals("FT")) {
+                    tempName = temp_obx3;
+                    tempNote = input.get("RESULT").get(cnt).get("OBX.5/CE.1");
+                }
+                if(temp_obx3.equals("METHOD")) {
+                    tempTestMethod = input.get("RESULT").get(cnt).get("OBX.5/CE.2");
+                    tempTestDilHeader=engine.callRule("MicroSusceptTestHeader", data.get("result_alias_group").toString() + input.get("RESULT").get(cnt).get("OBX.5/CE.1") + "DIL", data,true);
+                    tempTestInterpHeader=engine.callRule("MicroSusceptTestHeader", data.get("result_alias_group").toString() + input.get("RESULT").get(cnt).get("OBX.5/CE.1") + "INT", data,true);
+                    tempResult="";
+                } else if (!temp_obx3.equals(next_obx3)) { %>
+                    <SUSCEPTIBLITY>
+                    <ORGANISM><%= tempOrganism %></ORGANISM>
+                    <TEST_METHOD><%= tempTestMethod %></TEST_METHOD>
+                    <TEST_DIL_HEADER><%= tempTestDilHeader %></TEST_DIL_HEADER>
+                    <TEST_INTERP_HEADER><%= tempTestInterpHeader %></TEST_INTERP_HEADER>
+
+                    <ANTIBIOTIC_NAME><%= tempName %></ANTIBIOTIC_NAME>
+                    <ANTIBIOTIC_RESULT><%= tempResult %></ANTIBIOTIC_RESULT>
+                    <ANTIBIOTIC_INTERP><%= tempInterp %></ANTIBIOTIC_INTERP>
+                    <ANTIBIOTIC_NOTE><%= tempNote %></ANTIBIOTIC_NOTE>
+                    </SUSCEPTIBLITY>
+                <%
+                    tempName = "";
+                    tempResult = "";
+                    tempInterp = "";
+                    tempNote = "";
+                }
+            }
+
+            if(temp_obx3.equals("ORGANISM")) {
+                if(processObx!=true) {  %>
+                    <SUSCEPTIBLITIES>
+                <%} else {
+                    tempTestMethod = "";
+                    tempTestDilHeader = "";
+                    tempTestInterpHeader = "";
+                    tempOrganism = "";%>
+                <%}
+                tempOrganism=input.get("RESULT").get(cnt).get("OBX.5/CE.2").toString();
+
+
+                processObx=true;  //don't process obx's until we get to Organism obx
+            }
+        }
+
+        if(processObx==true){%>  </SUSCEPTIBLITIES>   <%}//only put end tag on if there were susceptibilities
+%>#}
+
+[#
+ID: MicroResultTestHeader
+#]
+
+Template {#<%
+        if(input.get("OBX.2").toString().equals("TX")) { %>
+            <TEST_DIL_HEADER><%=engine.callRule("MicroSusceptTestHeader", data.get("result_alias_group").toString() + input.get("OBX.5/CE.1"), data,true)%></TEST_DIL_HEADER>
+            <TEST_INTERP_HEADER><%=engine.callRule("MicroSusceptTestHeader", data.get("result_alias_group").toString() + input.get("OBX.8"), data,true)%></TEST_INTERP_HEADER>
+        <% }
+%>#}
